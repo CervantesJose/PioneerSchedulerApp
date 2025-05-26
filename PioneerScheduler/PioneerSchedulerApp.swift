@@ -11,7 +11,7 @@ import SwiftUI
 struct PioneerSchedulerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            EmployeeView(vm: EmployeeViewModel.mock, employeeId: EmployeeViewModel.mock.employees.first!.id)
         }
     }
 }
