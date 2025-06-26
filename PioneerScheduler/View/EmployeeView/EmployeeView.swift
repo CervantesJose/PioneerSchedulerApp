@@ -12,7 +12,7 @@ struct EmployeeView: View {
     
     @State private var hoursWorked: String = ""
     @State private var locationOfWork: String = ""
-    @State private var tasks: [Task] = []
+    @State private var timesheets: [Timesheet] = []
     var employeeId: UUID
     
     var body: some View {
@@ -23,27 +23,34 @@ struct EmployeeView: View {
                 TextField("Location of work", text: $locationOfWork)
                 
                 Button("Add Task/Work Day") {
-                    let newTask = Task(name: locationOfWork, completed: false)
-                    tasks.append(newTask)
+                    let newTimesheet = Timesheet(
+                        id: UUID(),
+                        title: "",
+                        is_complete: false,
+                        user_id: UUID(),
+                        created_at: Date(),
+                        updated_at: Date()
+                    )
+                    timesheets.append(newTimesheet)
                     locationOfWork = ""
                 }
                 .padding()
                 
                 Spacer()
                 
-                if tasks.count == 0 {
+                if timesheets.count == 0 {
                     Text("Task/Work day(s) will appear here")
                 } else {
-                    List(tasks) { task in
-                        Text(task.name)
+                    List(timesheets) { timesheet in
+                        Text(timesheet.title)
                     }
                 }
                 
                 Spacer()
                 Button("Log Week") {
                     if let hours = Double(hoursWorked) {
-                        vm.logWorkday(for: employeeId, hours: hours, tasks: tasks)
-                        tasks.removeAll()
+//                        $vm.logWorkday(for: employeeId, hours: hours, timesheets: timesheets)
+                        timesheets.removeAll()
                         hoursWorked = ""
                     }
                 }

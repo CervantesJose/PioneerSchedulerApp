@@ -8,58 +8,55 @@
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject var vm: EmployeeViewModel
-    @State private var username: String = ""
-    @State private var password: String = ""
-    @State private var showError: Bool = false
-    @State private var showCreateEmployee: Bool = false
-    @State private var employeeName: String = ""
-    @State private var employeeEmail: String = ""
-    
+
+    private enum Constants {
+        static let buttonPadding: CGFloat = 8
+    }
+
+    @Bindable var viewModel: AuthViewModel
+
     var body: some View {
-        VStack {
-            if showCreateEmployee {
-                Text("Create employee account")
-                TextField("Employee Name", text: $employeeName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+        NavigationStack {
+            VStack(spacing: 16) {
+                TextField("Email", text: $viewModel.userEmail)
+                    .keyboardType(.emailAddress)
+                    .textContentType(.username)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .padding()
-                TextField("Employee email", text: $employeeEmail)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .background(.ultraThickMaterial)
+                    .cornerRadius(Constants.buttonPadding)
+
+                SecureField("Password", text: $viewModel.userPassword)
+                    .textContentType(.password)
                     .padding()
-                Button("Create account") {
-                    vm.createEmployeeAccount(name: employeeName, email: employeeEmail)
+                    .background(.ultraThickMaterial)
+                    .cornerRadius(Constants.buttonPadding)
+
+                Button {
+                    viewModel.handleSignInButtonTapped()
+                } label: {
+                    Text("Login")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background(.blue)
+                        .cornerRadius(Constants.buttonPadding)
+                        .padding(.top)
                 }
-                .padding()
-            } else {
-                Text("Login")
-                TextField("Username", text: $username)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                SecureField("Password", text: $password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                Button("Login") {
-                    if !vm.login(username: username, password: password) {
-                        showError = true
-                    }
-                }
-                .padding()
-                
-                if showError {
-                    Text("Invalid username or password")
-                        .foregroundStyle(.red)
-                }
-                
-                Button("Create employee account") {
-                    showCreateEmployee = true
-                }
-                .padding()
+                //                    .disabled(viewModel.isLoading || !viewModel.isValid)
+                .alert("Login Failed", isPresented: $viewModel.isShowingAlert, actions: {
+                    Button("OK", role: .cancel) { }
+                }, message: {
+                    Text(viewModel.alertMessage)
+                })
             }
+            .navigationTitle("Login")
+            .padding()
         }
-        .padding()
     }
 }
 
 #Preview {
-    LoginView(vm: EmployeeViewModel.mock)
+    LoginView(viewModel: AuthViewModel(appState: AppState()))
 }

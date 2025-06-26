@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7A781C132E09A76C004A0685 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7A781C122E09A76C004A0685 /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7A4E64682CA361DA00707CAE /* PioneerScheduler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PioneerScheduler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7A781C1F2E09B105004A0685 /* Exceptions for "PioneerScheduler" folder in "PioneerScheduler" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7A4E64672CA361DA00707CAE /* PioneerScheduler */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7A4E646A2CA361DA00707CAE /* PioneerScheduler */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7A781C1F2E09B105004A0685 /* Exceptions for "PioneerScheduler" folder in "PioneerScheduler" target */,
+			);
 			path = PioneerScheduler;
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A781C132E09A76C004A0685 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = PioneerScheduler;
 			packageProductDependencies = (
+				7A781C122E09A76C004A0685 /* Supabase */,
 			);
 			productName = PioneerScheduler;
 			productReference = 7A4E64682CA361DA00707CAE /* PioneerScheduler.app */;
@@ -94,6 +113,9 @@
 			);
 			mainGroup = 7A4E645F2CA361DA00707CAE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7A781C112E09A76C004A0685 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7A4E64692CA361DA00707CAE /* Products */;
 			projectDirPath = "";
@@ -252,6 +274,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PioneerScheduler/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -291,6 +314,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PioneerScheduler/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -339,6 +363,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7A781C112E09A76C004A0685 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7A781C122E09A76C004A0685 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A781C112E09A76C004A0685 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7A4E64602CA361DA00707CAE /* Project object */;
 }

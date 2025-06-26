@@ -40,9 +40,9 @@ class EmployeeViewModel: ObservableObject {
         isLoggedIn = true
     }
     
-    func logWorkday(for employeeId: UUID, hours: Double, tasks: [Task], date: Date = Date()) {
+    func logWorkday(for employeeId: UUID, hours: Double, timesheets: [Timesheet], date: Date = Date()) {
         if let index = employees.firstIndex(where: { $0.id == employeeId }) {
-            let newWorkday = Workday(date: date, hoursWorked: hours, tasks: tasks)
+            let newWorkday = Workday(date: date, hoursWorked: hours, timesheets: timesheets)
             employees[index].workdays.append(newWorkday)
         }
     }
@@ -57,24 +57,29 @@ class EmployeeViewModel: ObservableObject {
         return employee.totalHoursForWeek
     }
     
-    func tasksForWeek(for employeeId: UUID) -> [Task] {
+    func timesheetsForWeek(for employeeId: UUID) -> [Timesheet] {
         guard let employee = employees.first(where: { $0.id == employeeId }) else { return [] }
-        return employee.tasksForWeek
+        return employee.timesheetsForWeek
     }
 }
 
 extension EmployeeViewModel {
     static var mock: EmployeeViewModel {
         let viewModel = EmployeeViewModel()
-        let tasks = [
-            Task(name: "Design UI", completed: true),
-            Task(name: "Fix bugs", completed: false),
-            Task(name: "Write documentation", completed: true)
+        let timesheets = [
+            Timesheet(
+                id: UUID(),
+                title: "Mock Timesheet",
+                is_complete: false,
+                user_id: UUID(),
+                created_at: Date(),
+                updated_at: Date()
+            )
         ]
-        
-        let workday1 = Workday(date: Date(), hoursWorked: 8, tasks: tasks)
-        let workday2 = Workday(date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, hoursWorked: 6, tasks: tasks)
-        
+
+        let workday1 = Workday(date: Date(), hoursWorked: 8, timesheets: timesheets)
+        let workday2 = Workday(date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, hoursWorked: 6, timesheets: timesheets)
+
         let employee1 = Employee(name: "John Doe", email: "john@example.com", workdays: [workday1, workday2])
         let employee2 = Employee(name: "Jane Smith", email: "jane@example.com", workdays: [workday1])
         

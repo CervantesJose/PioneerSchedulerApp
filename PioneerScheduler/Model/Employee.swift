@@ -22,12 +22,12 @@ struct Employee: Identifiable {
         }.reduce(0) { $0 + $1.hoursWorked }
     }
     
-    var tasksForWeek: [Task] {
+    var timesheetsForWeek: [Timesheet] {
         let calendar = Calendar.current
         let week = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())
         
         return workdays.filter {
             calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: $0.date) == week
-        }.flatMap { $0.tasks }
+        }.flatMap { $0.timesheets }
     }
 }

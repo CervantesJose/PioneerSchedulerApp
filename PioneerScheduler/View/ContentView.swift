@@ -8,19 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var vm = EmployeeViewModel()
-    @State private var isEmployer = false
+    @Environment(AppState.self) var appState
     
     var body: some View {
-        VStack {
-            if vm.isLoggedIn {
-                if vm.isEmployer {
-                    EmployerView(vm: vm)
-                } else if let employee = vm.currentEmployee {
-                    EmployeeView(vm: vm, employeeId: employee.id)
-                }
-            } else {
-                LoginView(vm: vm)
+        Group {
+            switch appState.isAuthenticated {
+            case .loading:
+                ProgressView("Loading...")
+            case .authenticated:
+                TimesheetView(viewModel: TimesheetViewModel())
+            case .unathenticated:
+                LoginView(viewModel: AuthViewModel(appState: appState))
             }
         }
     }

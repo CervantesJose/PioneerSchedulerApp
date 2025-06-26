@@ -11,18 +11,21 @@ struct EmployerView: View {
     @ObservedObject var vm: EmployeeViewModel
     
     var body: some View {
-        List(vm.employees) { employee in
-            VStack(alignment: .leading) {
-                Text(employee.name)
-                    .font(.title)
-                Text("Hours this week: \(employee.totalHoursForWeek)")
-                    .font(.headline)
-                Text("Tasks worked on this week:")
-                    .font(.headline)
-                ForEach(employee.tasksForWeek) { task in
-                    Text(task.name)
+        NavigationStack {
+            List(vm.employees) { employee in
+                VStack(alignment: .leading) {
+                    Text(employee.name)
+                        .font(.title)
+                    Text("Hours this week: \(employee.totalHoursForWeek.formatted())")
+                        .font(.headline)
+                    Text("Tasks worked on this week:")
+                        .font(.headline)
+                    ForEach(employee.timesheetsForWeek) { timesheet in
+                        Text(timesheet.title)
+                    }
                 }
             }
+            .navigationTitle("Employees")
         }
     }
 }
