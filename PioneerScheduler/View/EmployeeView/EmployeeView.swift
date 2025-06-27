@@ -48,11 +48,11 @@ struct EmployeeView: View {
                 
                 Spacer()
                 Button("Log Week") {
-                    if let hours = Double(hoursWorked) {
+//                    if let hours = Double(hoursWorked) {
 //                        $vm.logWorkday(for: employeeId, hours: hours, timesheets: timesheets)
-                        timesheets.removeAll()
-                        hoursWorked = ""
-                    }
+//                        timesheets.removeAll()
+//                        hoursWorked = ""
+//                    }
                 }
             }
             .navigationTitle("Work Week")

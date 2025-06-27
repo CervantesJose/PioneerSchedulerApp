@@ -10,6 +10,7 @@ import SwiftUI
 struct TimesheetView: View {
 
     @Bindable var viewModel = TimesheetViewModel()
+    var authViewModel: AuthViewModel
 
     var body: some View {
         NavigationView {
@@ -87,13 +88,24 @@ struct TimesheetView: View {
             }
             .navigationTitle("Timesheets")
             .toolbar {
-                Button {
-                    viewModel.toggleIsCreatingNewItemSheetPresented()
-                } label: {
-                    Image(systemName: "plus")
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        authViewModel.handleSignOut()
+                    } label: {
+                        Text("Sign out")
+                            .padding(.trailing, 240)
+                    }
                 }
-                .buttonStyle(.borderedProminent)
-                .clipShape(.circle)
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        viewModel.toggleIsCreatingNewItemSheetPresented()
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .clipShape(.circle)
+                }
             }
             .sheet(isPresented: $viewModel.isCreatingNewItemSheetPresented) {
                 createTimesheetView
@@ -161,5 +173,5 @@ struct TimesheetView: View {
 }
 
 #Preview {
-    TimesheetView(viewModel: TimesheetViewModel())
+    TimesheetView(viewModel: TimesheetViewModel(), authViewModel: AuthViewModel(appState: AppState()))
 }

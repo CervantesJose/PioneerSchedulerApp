@@ -16,9 +16,14 @@ struct ContentView: View {
             case .loading:
                 ProgressView("Loading...")
             case .authenticated:
-                TimesheetView(viewModel: TimesheetViewModel())
+                TimesheetView(viewModel: TimesheetViewModel(), authViewModel: AuthViewModel(appState: appState))
             case .unathenticated:
                 LoginView(viewModel: AuthViewModel(appState: appState))
+            }
+        }
+        .onAppear {
+            Task {
+                await appState.checkLoginStatus()
             }
         }
     }
