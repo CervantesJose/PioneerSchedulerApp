@@ -113,7 +113,7 @@ class TimesheetViewModel {
 
     func getUserID() async -> UUID? {
         do {
-            return try await supabase.auth.user().  id
+            return try await supabase.auth.user().id
         } catch {
             print("Error getting user id: \(error)")
             return nil
