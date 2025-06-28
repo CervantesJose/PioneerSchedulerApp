@@ -14,86 +14,32 @@ struct TimesheetView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(viewModel.timesheets) { timesheet in
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text(timesheet.title)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-
-                            Spacer()
-
-                            if timesheet.is_complete {
-                                Text("Completed")
-                                    .font(.caption)
-                                    .foregroundStyle(.green)
-                                    .padding(8)
-                                    .background(Color.green.opacity((0.2)))
-                                    .cornerRadius(4)
-                            } else {
-                                Text("Pending")
-                                    .font(.caption)
-                                    .foregroundStyle(.red)
-                                    .padding(8)
-                                    .background(Color.red.opacity((0.2)))
-                                    .cornerRadius(4)
-                            }
-                        }
-
-                        Text("\(timesheet.created_at, style: .date)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        if let description = timesheet.description, description.isEmpty == false {
-                            Text(description)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .padding(.vertical, 4)
-                    .swipeActions(edge: .trailing) {
-                        if timesheet.is_complete == false {
-                            Button {
-                                Task {
-                                    await viewModel.markAsCompleted(id: timesheet.id)
-                                }
-                            } label: {
-                                Label("Complete", systemImage: "checkmark.circle")
-                            }
-                            .tint(.green)
-                        } else {
-                            Button {
-                                Task {
-                                    await viewModel.markAsIncomplete(id: timesheet.id)
-                                }
-                            } label: {
-                                Label("Incomplete", systemImage: "x.circle")
-                            }
-                            .tint(.orange)
-                        }
-
-                        Button(role: .destructive) {
-                            Task {
-                                await viewModel.deleteTimesheet(id: timesheet.id)
-                            }
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    }
+            Group {
+                if viewModel.isLoading {
+                    loadingView
+                } else if viewModel.timesheets.isEmpty {
+                    emptyView
+                } else {
+                    listView
                 }
             }
+            .navigationTitle("Timesheets")
+            .toolbarBackground(Color("backgroundColor").opacity(0.2), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .task {
                 await viewModel.fetchTimesheets()
             }
-            .navigationTitle("Timesheets")
+            .refreshable {
+                await viewModel.fetchTimesheets()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
                         authViewModel.handleSignOut()
                     } label: {
                         Text("Sign out")
-                            .padding(.trailing, 240)
+                            .font(.system(size: 18))
+                            .fontWeight(.bold)
                     }
                 }
 
@@ -104,7 +50,7 @@ struct TimesheetView: View {
                         Image(systemName: "plus")
                     }
                     .buttonStyle(.borderedProminent)
-                    .clipShape(.circle)
+                    .clipShape(Circle())
                 }
             }
             .sheet(isPresented: $viewModel.isCreatingNewItemSheetPresented) {
@@ -113,6 +59,105 @@ struct TimesheetView: View {
             }
         }
     }
+
+    @ViewBuilder
+    private var loadingView: some View {
+        ProgressView("Loading timesheets")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    @ViewBuilder
+    private var emptyView: some View {
+        VStack {
+            Spacer()
+            Button {
+                viewModel.toggleIsCreatingNewItemSheetPresented()
+            } label: {
+                Text("Create a timesheet")
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+            }
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.systemGroupedBackground))
+    }
+
+    @ViewBuilder
+    private var listView: some View {
+        List {
+            ForEach(viewModel.timesheets) { timesheet in
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(timesheet.title)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        Spacer()
+
+                        if timesheet.is_complete {
+                            Text("Completed")
+                                .font(.caption)
+                                .foregroundStyle(.green)
+                                .padding(8)
+                                .background(Color.green.opacity(0.2))
+                                .cornerRadius(4)
+                        } else {
+                            Text("Pending")
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                                .padding(8)
+                                .background(Color.red.opacity(0.2))
+                                .cornerRadius(4)
+                        }
+                    }
+
+                    Text("\(timesheet.created_at, style: .date)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    if let description = timesheet.description, !description.isEmpty {
+                        Text(description)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+                .swipeActions(edge: .trailing) {
+                    if !timesheet.is_complete {
+                        Button {
+                            Task {
+                                await viewModel.markAsCompleted(id: timesheet.id)
+                            }
+                        } label: {
+                            Label("Complete", systemImage: "checkmark.circle")
+                        }
+                        .tint(.green)
+                    } else {
+                        Button {
+                            Task {
+                                await viewModel.markAsIncomplete(id: timesheet.id)
+                            }
+                        } label: {
+                            Label("Incomplete", systemImage: "x.circle")
+                        }
+                        .tint(.orange)
+                    }
+
+                    Button(role: .destructive) {
+                        Task {
+                            await viewModel.deleteTimesheet(id: timesheet.id)
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+    }
+
 
     @ViewBuilder
     private var createTimesheetView: some View {
@@ -134,10 +179,24 @@ struct TimesheetView: View {
                         .font(.headline)
                         .foregroundStyle(.secondary)
 
-                    TextField("Enter description", text: $viewModel.newTimesheetDescription)
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(10)
+                    ZStack(alignment: .topLeading) {
+                        if viewModel.newTimesheetDescription.isEmpty {
+                                Text("Enter description...")
+                                    .foregroundColor(.gray)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 12)
+                                    .allowsHitTesting(false) // 👈 prevent tap blocking
+                            }
+
+                        TextEditor(text: $viewModel.newTimesheetDescription)
+                                .frame(minHeight: 100, maxHeight: 200)
+                                .scrollContentBackground(.hidden) // optional, for better styling
+                                .padding(4)
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(.secondarySystemBackground))
+                        )
                 }
                 .padding(.bottom)
 

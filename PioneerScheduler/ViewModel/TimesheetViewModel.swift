@@ -16,10 +16,12 @@ class TimesheetViewModel {
     var newTimesheetDescription = ""
 
     var isCreatingNewItemSheetPresented = false
+    var isLoading = true
 
     init() { }
 
     func fetchTimesheets() async {
+        isLoading = true
         if let userID = await getUserID() {
             do {
                 let timesheets: [Timesheet] = try await supabase
@@ -34,6 +36,7 @@ class TimesheetViewModel {
                 print("Error fetching timesheets: \(error)")
             }
         }
+        isLoading = false
     }
 
     func addTimesheet(title: String, description: String?) async {
@@ -110,7 +113,7 @@ class TimesheetViewModel {
 
     func getUserID() async -> UUID? {
         do {
-            return try await supabase.auth.user().id
+            return try await supabase.auth.user().  id
         } catch {
             print("Error getting user id: \(error)")
             return nil
