@@ -9,6 +9,7 @@ import AuthenticationServices
 import Supabase
 import SwiftUI
 
+@MainActor
 @Observable
 final class AuthViewModel {
 
@@ -63,6 +64,9 @@ final class AuthViewModel {
             return
         }
 
+        let newViewModel = TimesheetViewModel()
+        self.timesheetViewModel = newViewModel
+
         Task {
             await signIn()
         }
@@ -98,10 +102,9 @@ final class AuthViewModel {
     private func signOut() async {
         do {
             try await supabase.auth.signOut()
-
             isAuthenticated = false
         } catch {
-
+            print(error.localizedDescription)
         }
     }
 
@@ -124,6 +127,9 @@ final class AuthViewModel {
         toggleLoadingState()
 
         defer { toggleLoadingState() }
+
+        let newViewModel = TimesheetViewModel()
+        self.timesheetViewModel = newViewModel
 
         guard let identityTokenData = credential.identityToken,
               let identityToken = String(data: identityTokenData, encoding: .utf8) else {

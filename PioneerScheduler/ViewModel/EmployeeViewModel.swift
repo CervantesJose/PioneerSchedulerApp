@@ -70,10 +70,9 @@ extension EmployeeViewModel {
             Timesheet(
                 id: UUID(),
                 title: "Mock Timesheet",
-                is_complete: false,
-                user_id: UUID(),
-                created_at: Date(),
-                updated_at: Date()
+                isComplete: false,
+                userId: UUID(),
+                workday: Date()
             )
         ]
 

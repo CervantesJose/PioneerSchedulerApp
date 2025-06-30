@@ -26,10 +26,9 @@ struct EmployeeView: View {
                     let newTimesheet = Timesheet(
                         id: UUID(),
                         title: "",
-                        is_complete: false,
-                        user_id: UUID(),
-                        created_at: Date(),
-                        updated_at: Date()
+                        isComplete: false,
+                        userId: UUID(),
+                        workday: Date()
                     )
                     timesheets.append(newTimesheet)
                     locationOfWork = ""

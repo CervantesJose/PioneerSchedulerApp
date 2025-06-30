@@ -8,11 +8,20 @@
 import Foundation
 
 struct Timesheet: Identifiable, Codable {
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case description
+        case isComplete = "is_complete"
+        case userId = "user_id"
+        case workday
+    }
+
     var id: UUID
     var title: String
     var description: String?
-    var is_complete: Bool
-    var user_id: UUID
-    var created_at: Date
-    var updated_at: Date
+    var isComplete: Bool
+    var userId: UUID
+    var workday: Date
 }

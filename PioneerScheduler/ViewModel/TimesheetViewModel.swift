@@ -8,20 +8,30 @@
 import Supabase
 import SwiftUI
 
+@MainActor
 @Observable
 class TimesheetViewModel {
+
+    enum LoadingState {
+        case idle
+        case loading
+        case loaded
+        case failed(Error)
+    }
+
     var timesheets: [Timesheet] = []
 
     var newTimesheetTitle = ""
     var newTimesheetDescription = ""
 
     var isCreatingNewItemSheetPresented = false
-    var isLoading = true
+    var state: LoadingState = .idle
 
     init() { }
 
     func fetchTimesheets() async {
-        isLoading = true
+        state = .loading
+
         if let userID = await getUserID() {
             do {
                 let timesheets: [Timesheet] = try await supabase
@@ -32,11 +42,11 @@ class TimesheetViewModel {
                     .value
 
                 self.timesheets = timesheets
+                state = .loaded
             } catch {
-                print("Error fetching timesheets: \(error)")
+                state = .failed(error)
             }
         }
-        isLoading = false
     }
 
     func addTimesheet(title: String, description: String?) async {
@@ -45,10 +55,9 @@ class TimesheetViewModel {
                 id: UUID(),
                 title: title,
                 description: description,
-                is_complete: false,
-                user_id: userID,
-                created_at: Date(),
-                updated_at: Date()
+                isComplete: false,
+                userId: userID,
+                workday: Date()
             )
 
             do {
@@ -73,7 +82,7 @@ class TimesheetViewModel {
         do {
             try await supabase
                 .from("timesheets")
-                .update(["is_complete": true])
+                .update(["isComplete": true])
                 .eq("id", value: id)
                 .execute()
 
@@ -87,7 +96,7 @@ class TimesheetViewModel {
         do {
             try await supabase
                 .from("timesheets")
-                .update(["is_complete": false])
+                .update(["isComplete": false])
                 .eq("id", value: id)
                 .execute()
 
@@ -98,14 +107,16 @@ class TimesheetViewModel {
     }
 
     func deleteTimesheet(id: UUID) async {
+        if let index = timesheets.firstIndex(where: { $0.id == id }) {
+            timesheets.remove(at: index)
+        }
+
         do {
             try await supabase
                 .from("timesheets")
                 .delete()
                 .eq("id", value: id)
                 .execute()
-            
-            await fetchTimesheets()
         } catch {
             print("Error deleting timesheet: \(error)")
         }

@@ -9,25 +9,32 @@ import SwiftUI
 
 struct TimesheetView: View {
 
-    @Bindable var viewModel = TimesheetViewModel()
+    @Bindable var viewModel: TimesheetViewModel
     var authViewModel: AuthViewModel
 
     var body: some View {
         NavigationView {
             Group {
-                if viewModel.isLoading {
+                switch viewModel.state {
+                case .idle, .loading:
                     loadingView
-                } else if viewModel.timesheets.isEmpty {
-                    emptyView
-                } else {
-                    listView
+                case .loaded:
+                    if viewModel.timesheets.isEmpty {
+                        emptyView
+                    } else {
+                        listView
+                    }
+                case .failed(let error):
+                    Text("Failed to load timesheets: \(error.localizedDescription)")
                 }
             }
             .navigationTitle("Timesheets")
             .toolbarBackground(Color("backgroundColor").opacity(0.2), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .task {
-                await viewModel.fetchTimesheets()
+                if case .idle = viewModel.state {
+                    await viewModel.fetchTimesheets()
+                }
             }
             .refreshable {
                 await viewModel.fetchTimesheets()
@@ -88,7 +95,7 @@ struct TimesheetView: View {
     @ViewBuilder
     private var listView: some View {
         List {
-            ForEach(viewModel.timesheets) { timesheet in
+            ForEach(viewModel.timesheets, id: \.id) { timesheet in
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text(timesheet.title)
@@ -97,7 +104,7 @@ struct TimesheetView: View {
 
                         Spacer()
 
-                        if timesheet.is_complete {
+                        if timesheet.isComplete {
                             Text("Completed")
                                 .font(.caption)
                                 .foregroundStyle(.green)
@@ -114,7 +121,7 @@ struct TimesheetView: View {
                         }
                     }
 
-                    Text("\(timesheet.created_at, style: .date)")
+                    Text("\(timesheet.workday, style: .date)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -124,9 +131,8 @@ struct TimesheetView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                .padding(.vertical, 4)
                 .swipeActions(edge: .trailing) {
-                    if !timesheet.is_complete {
+                    if !timesheet.isComplete {
                         Button {
                             Task {
                                 await viewModel.markAsCompleted(id: timesheet.id)
