@@ -82,7 +82,7 @@ class TimesheetViewModel {
         do {
             try await supabase
                 .from("timesheets")
-                .update(["isComplete": true])
+                .update(["is_complete": true])
                 .eq("id", value: id)
                 .execute()
 
@@ -96,7 +96,7 @@ class TimesheetViewModel {
         do {
             try await supabase
                 .from("timesheets")
-                .update(["isComplete": false])
+                .update(["is_complete": false])
                 .eq("id", value: id)
                 .execute()
 

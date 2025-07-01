@@ -96,39 +96,61 @@ struct TimesheetView: View {
     private var listView: some View {
         List {
             ForEach(viewModel.timesheets, id: \.id) { timesheet in
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text(timesheet.title)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
+                NavigationLink(destination: TimesheetDetailView(
+                    timesheet: timesheet,
+                    viewModel: viewModel //
+                )) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 16) {
+                            Text(timesheet.title)
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                                .lineLimit(1)
 
-                        Spacer()
+                            Spacer()
 
-                        if timesheet.isComplete {
-                            Text("Completed")
-                                .font(.caption)
-                                .foregroundStyle(.green)
-                                .padding(8)
-                                .background(Color.green.opacity(0.2))
-                                .cornerRadius(4)
-                        } else {
-                            Text("Pending")
-                                .font(.caption)
-                                .foregroundStyle(.red)
-                                .padding(8)
-                                .background(Color.red.opacity(0.2))
-                                .cornerRadius(4)
+                            if timesheet.isComplete {
+                                Text("Completed")
+                                    .font(.caption)
+                                    .foregroundStyle(.green)
+                                    .padding(8)
+                                    .background(Color.green.opacity(0.2))
+                                    .cornerRadius(4)
+                            } else {
+                                Text("Pending")
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
+                                    .padding(8)
+                                    .background(Color.red.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
                         }
-                    }
+                        .padding(.leading)
 
-                    Text("\(timesheet.workday, style: .date)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    if let description = timesheet.description, !description.isEmpty {
-                        Text(description)
-                            .font(.subheadline)
+                        Text("\(timesheet.workday, style: .date)")
+                            .font(.caption)
                             .foregroundStyle(.secondary)
+                            .padding(.leading)
+
+                        if let description = timesheet.description, !description.isEmpty {
+                            Text(description)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .padding(.leading)
+                        }
+
+                        SeparatorView()
+                    }
+                }
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets())
+                .swipeActions(edge: .leading) {
+                    Button(role: .destructive) {
+                        Task {
+                            await viewModel.deleteTimesheet(id: timesheet.id)
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
                     }
                 }
                 .swipeActions(edge: .trailing) {
@@ -151,17 +173,11 @@ struct TimesheetView: View {
                         }
                         .tint(.orange)
                     }
-
-                    Button(role: .destructive) {
-                        Task {
-                            await viewModel.deleteTimesheet(id: timesheet.id)
-                        }
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("backgroundColor").opacity(0.2))
     }
 
 
