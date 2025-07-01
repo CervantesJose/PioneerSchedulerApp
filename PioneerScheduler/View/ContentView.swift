@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(AppState.self) var appState
+    @StateObject private var timesheetsViewModel = TimesheetViewModel()
     
     var body: some View {
         Group {
@@ -16,7 +17,8 @@ struct ContentView: View {
             case .loading:
                 ProgressView("Loading...")
             case .authenticated:
-                TimesheetView(viewModel: TimesheetViewModel(), authViewModel: AuthViewModel(appState: appState))
+                TimesheetView(authViewModel: AuthViewModel(appState: appState))
+                    .environmentObject(timesheetsViewModel)
             case .unathenticated:
                 LoginView(viewModel: AuthViewModel(appState: appState))
             }

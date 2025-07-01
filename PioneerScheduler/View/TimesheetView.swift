@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimesheetView: View {
 
-    @Bindable var viewModel: TimesheetViewModel
+    @EnvironmentObject var viewModel: TimesheetViewModel
     var authViewModel: AuthViewModel
 
     var body: some View {
@@ -96,10 +96,9 @@ struct TimesheetView: View {
     private var listView: some View {
         List {
             ForEach(viewModel.timesheets, id: \.id) { timesheet in
-                NavigationLink(destination: TimesheetDetailView(
-                    timesheet: timesheet,
-                    viewModel: viewModel //
-                )) {
+                NavigationLink(destination:
+                                TimesheetDetailView(timesheet: timesheet)
+                ) {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 16) {
                             Text(timesheet.title)
@@ -207,12 +206,12 @@ struct TimesheetView: View {
                                     .foregroundColor(.gray)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 12)
-                                    .allowsHitTesting(false) // 👈 prevent tap blocking
+                                    .allowsHitTesting(false)
                             }
 
                         TextEditor(text: $viewModel.newTimesheetDescription)
                                 .frame(minHeight: 100, maxHeight: 200)
-                                .scrollContentBackground(.hidden) // optional, for better styling
+                                .scrollContentBackground(.hidden)
                                 .padding(4)
                         }
                         .background(
@@ -254,5 +253,6 @@ struct TimesheetView: View {
 }
 
 #Preview {
-    TimesheetView(viewModel: TimesheetViewModel(), authViewModel: AuthViewModel(appState: AppState()))
+    TimesheetView(authViewModel: AuthViewModel(appState: AppState()))
+        .environmentObject(TimesheetViewModel())
 }

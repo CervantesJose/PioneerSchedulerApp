@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimesheetDetailView: View {
     let timesheet: Timesheet
-    @Bindable var viewModel: TimesheetViewModel
+    @EnvironmentObject var viewModel: TimesheetViewModel
 
     var body: some View {
         Text(timesheet.title)
@@ -24,7 +24,7 @@ struct TimesheetDetailView: View {
             isComplete: false,
             userId: UUID(),
             workday: Date()
-        ),
-        viewModel: TimesheetViewModel()
+        )
     )
+    .environmentObject(TimesheetViewModel())
 }

@@ -5,12 +5,12 @@
 //  Created by Jose Cervantes on 6/24/25.
 //
 
+import Combine
 import Supabase
 import SwiftUI
 
 @MainActor
-@Observable
-class TimesheetViewModel {
+class TimesheetViewModel: ObservableObject {
 
     enum LoadingState {
         case idle
@@ -19,13 +19,13 @@ class TimesheetViewModel {
         case failed(Error)
     }
 
-    var timesheets: [Timesheet] = []
+    @Published var timesheets: [Timesheet] = []
 
-    var newTimesheetTitle = ""
-    var newTimesheetDescription = ""
+    @Published var newTimesheetTitle = ""
+    @Published var newTimesheetDescription = ""
 
-    var isCreatingNewItemSheetPresented = false
-    var state: LoadingState = .idle
+    @Published var isCreatingNewItemSheetPresented = false
+    @Published var state: LoadingState = .idle
 
     init() { }
 
