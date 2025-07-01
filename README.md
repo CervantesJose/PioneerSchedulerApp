@@ -1,2 +1,2 @@
 # Pioneer Scheduling App
-Scheduling app to help employer manage hours worked/week and tasks completed/day by employee.
+Timesheets app to help employee manage hours worked/week and tasks completed/day.
