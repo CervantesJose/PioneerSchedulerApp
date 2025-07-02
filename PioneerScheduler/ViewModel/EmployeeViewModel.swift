@@ -72,7 +72,7 @@ extension EmployeeViewModel {
                 title: "Mock Timesheet",
                 isComplete: false,
                 userId: UUID(),
-                workday: Date()
+                createdAt: Date()
             )
         ]
 

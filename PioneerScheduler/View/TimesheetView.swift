@@ -13,7 +13,7 @@ struct TimesheetView: View {
     var authViewModel: AuthViewModel
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Group {
                 switch viewModel.state {
                 case .idle, .loading:
@@ -126,7 +126,7 @@ struct TimesheetView: View {
                         }
                         .padding(.leading)
 
-                        Text("\(timesheet.workday, style: .date)")
+                        Text("\(timesheet.createdAt, style: .date)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .padding(.leading)
@@ -141,6 +141,7 @@ struct TimesheetView: View {
                         SeparatorView()
                     }
                 }
+
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
                 .swipeActions(edge: .leading) {
@@ -152,7 +153,7 @@ struct TimesheetView: View {
                         Label("Delete", systemImage: "trash")
                     }
                 }
-                .swipeActions(edge: .trailing) {
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                     if !timesheet.isComplete {
                         Button {
                             Task {
@@ -175,8 +176,6 @@ struct TimesheetView: View {
                 }
             }
         }
-        .scrollContentBackground(.hidden)
-        .background(Color("backgroundColor").opacity(0.2))
     }
 
 

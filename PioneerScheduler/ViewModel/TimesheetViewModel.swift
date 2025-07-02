@@ -57,7 +57,7 @@ class TimesheetViewModel: ObservableObject {
                 description: description,
                 isComplete: false,
                 userId: userID,
-                workday: Date()
+                createdAt: Date()
             )
 
             do {
@@ -68,7 +68,7 @@ class TimesheetViewModel: ObservableObject {
 
                 toggleIsCreatingNewItemSheetPresented()
 
-                await fetchTimesheets()
+                timesheets.insert(newTimesheet, at: 0)
             } catch {
                 print("Error adding timesheet: \(error)")
             }
@@ -78,31 +78,23 @@ class TimesheetViewModel: ObservableObject {
         newTimesheetDescription = ""
     }
 
-    func markAsCompleted(id: UUID) async {
+    func updateTimesheet(id: UUID, title: String, description: String?) async {
         do {
             try await supabase
                 .from("timesheets")
-                .update(["is_complete": true])
+                .update([
+                    "title": title,
+                    "description": description ?? ""
+                    ])
                 .eq("id", value: id)
                 .execute()
 
-            await fetchTimesheets()
+            if let index = timesheets.firstIndex(where: { $0.id == id }) {
+                timesheets[index].title = title
+                timesheets[index].description = description ?? ""
+            }
         } catch {
-            print("Error marking timesheet as completed: \(error)")
-        }
-    }
-
-    func markAsIncomplete(id: UUID) async {
-        do {
-            try await supabase
-                .from("timesheets")
-                .update(["is_complete": false])
-                .eq("id", value: id)
-                .execute()
-
-            await fetchTimesheets()
-        } catch {
-            print("Error marking timesheet as incomplete: \(error)")
+            print(error.localizedDescription)
         }
     }
 
@@ -119,6 +111,38 @@ class TimesheetViewModel: ObservableObject {
                 .execute()
         } catch {
             print("Error deleting timesheet: \(error)")
+        }
+    }
+
+    func markAsCompleted(id: UUID) async {
+        do {
+            try await supabase
+                .from("timesheets")
+                .update(["is_complete": true])
+                .eq("id", value: id)
+                .execute()
+
+            if let index = timesheets.firstIndex(where: { $0.id == id }) {
+                timesheets[index].isComplete = true
+            }
+        } catch {
+            print("Error marking timesheet as completed: \(error)")
+        }
+    }
+
+    func markAsIncomplete(id: UUID) async {
+        do {
+            try await supabase
+                .from("timesheets")
+                .update(["is_complete": false])
+                .eq("id", value: id)
+                .execute()
+
+            if let index = timesheets.firstIndex(where: { $0.id == id }) {
+                timesheets[index].isComplete = false
+            }
+        } catch {
+            print("Error marking timesheet as incomplete: \(error)")
         }
     }
 
