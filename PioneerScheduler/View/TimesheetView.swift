@@ -217,7 +217,8 @@ struct TimesheetView: View {
                                 .fill(Color(.secondarySystemBackground))
                         )
                 }
-                .padding(.bottom)
+
+                DatePicker("Select date", selection: $viewModel.newTimesheetDate)
 
                 Spacer()
 
@@ -226,7 +227,8 @@ struct TimesheetView: View {
                         await viewModel
                             .addTimesheet(
                                 title: viewModel.newTimesheetTitle,
-                                description: viewModel.newTimesheetDescription
+                                description: viewModel.newTimesheetDescription,
+                                workDates: [viewModel.newTimesheetDate]
                             )
                     }
                 } label: {
@@ -251,6 +253,6 @@ struct TimesheetView: View {
 }
 
 #Preview {
-    TimesheetView(authViewModel: AuthViewModel(appState: AppState()))
-        .environmentObject(TimesheetViewModel())
+    TimesheetView(authViewModel: .preview())
+        .environmentObject(TimesheetViewModel.preview())
 }

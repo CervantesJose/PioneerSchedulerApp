@@ -14,6 +14,7 @@ struct TimesheetDetailView: View {
 
     @State private var editedTitle = ""
     @State private var editedDescription = ""
+    @State private var editedDate: Date? = nil
 
     var body: some View {
         Form {
@@ -25,8 +26,12 @@ struct TimesheetDetailView: View {
 
             Section(header: Text("Description")) {
                 TextEditor(text: $editedDescription)
-                    .frame(minHeight: 100)
+                    .frame(minHeight: 100, maxHeight: 200)
                     .backgroundStyle(.regularMaterial)
+            }
+
+            Section(header: Text("Dates worked")) {
+                Text("\(timesheet.workDates ?? [])")
             }
 
             // TODO
@@ -45,7 +50,9 @@ struct TimesheetDetailView: View {
                         await viewModel.updateTimesheet(
                             id: timesheet.id,
                             title: editedTitle,
-                            description: editedDescription)
+                            description: editedDescription,
+                            workDates: editedDate.map { [$0] }
+                        )
                     }
                     dismiss()
                 }
