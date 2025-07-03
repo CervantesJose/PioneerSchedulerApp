@@ -15,7 +15,7 @@ struct Timesheet: Identifiable, Codable {
         case description
         case isComplete = "is_complete"
         case userId = "user_id"
-        case workday
+        case createdAt = "created_at"
     }
 
     var id: UUID
@@ -23,5 +23,33 @@ struct Timesheet: Identifiable, Codable {
     var description: String?
     var isComplete: Bool
     var userId: UUID
-    var workday: Date
+    var createdAt: Date
+}
+
+extension Timesheet {
+    static func mockData() -> [Timesheet] {
+        [
+            Timesheet(id: UUID(),
+                      title: "Mock timesheet",
+                      description: "Test string",
+                      isComplete: false,
+                      userId: UUID(),
+                      createdAt: Date()
+                     ),
+            Timesheet(id: UUID(),
+                      title: "Mock timesheet 2",
+                      description: "Test string 2",
+                      isComplete: false,
+                      userId: UUID(),
+                      createdAt: Date()
+                     ),
+            Timesheet(id: UUID(),
+                      title: "Mock timesheet 3",
+                      description: "Test string 3",
+                      isComplete: false,
+                      userId: UUID(),
+                      createdAt: Date()
+                     )
+        ]
+    }
 }

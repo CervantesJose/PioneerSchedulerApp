@@ -159,3 +159,12 @@ class TimesheetViewModel: ObservableObject {
         self.isCreatingNewItemSheetPresented.toggle()
     }
 }
+
+extension TimesheetViewModel {
+
+    static func preview() -> TimesheetViewModel {
+        let vm = TimesheetViewModel()
+        vm.timesheets = Timesheet.mockData()
+        return vm
+    }
+}

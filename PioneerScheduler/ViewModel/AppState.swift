@@ -29,3 +29,11 @@ final class AppState {
         }
     }
 }
+
+extension AppState {
+    static func preview() -> AppState {
+        let state = AppState()
+        state.isAuthenticated = .authenticated
+        return state
+    }
+}

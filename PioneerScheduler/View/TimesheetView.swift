@@ -141,7 +141,6 @@ struct TimesheetView: View {
                         SeparatorView()
                     }
                 }
-
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
                 .swipeActions(edge: .leading) {
@@ -154,7 +153,7 @@ struct TimesheetView: View {
                     }
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    if !timesheet.isComplete {
+                    if timesheet.isComplete == false {
                         Button {
                             Task {
                                 await viewModel.markAsCompleted(id: timesheet.id)

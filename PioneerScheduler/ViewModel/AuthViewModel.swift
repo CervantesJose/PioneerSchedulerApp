@@ -188,3 +188,9 @@ final class AuthViewModel {
         showAlert()
     }
 }
+
+extension AuthViewModel {
+    static func preview() -> AuthViewModel {
+        AuthViewModel(appState: .preview())
+    }
+}
