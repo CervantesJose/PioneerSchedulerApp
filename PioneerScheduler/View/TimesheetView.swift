@@ -62,7 +62,6 @@ struct TimesheetView: View {
             }
             .sheet(isPresented: $viewModel.isCreatingNewItemSheetPresented) {
                 createTimesheetView
-                    .presentationDetents([.medium])
             }
         }
     }
@@ -96,50 +95,8 @@ struct TimesheetView: View {
     private var listView: some View {
         List {
             ForEach(viewModel.timesheets, id: \.id) { timesheet in
-                NavigationLink(destination:
-                                TimesheetDetailView(timesheet: timesheet)
-                ) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(spacing: 16) {
-                            Text(timesheet.title)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-                                .lineLimit(1)
-
-                            Spacer()
-
-                            if timesheet.isComplete {
-                                Text("Completed")
-                                    .font(.caption)
-                                    .foregroundStyle(.green)
-                                    .padding(8)
-                                    .background(Color.green.opacity(0.2))
-                                    .cornerRadius(4)
-                            } else {
-                                Text("Pending")
-                                    .font(.caption)
-                                    .foregroundStyle(.red)
-                                    .padding(8)
-                                    .background(Color.red.opacity(0.2))
-                                    .cornerRadius(4)
-                            }
-                        }
-                        .padding(.leading)
-
-                        Text("\(timesheet.createdAt, style: .date)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .padding(.leading)
-
-                        if let description = timesheet.description, !description.isEmpty {
-                            Text(description)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .padding(.leading)
-                        }
-
-                        SeparatorView()
-                    }
+                NavigationLink(value: timesheet) {
+                    timesheetRow(timesheet: timesheet)
                 }
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets())
@@ -175,8 +132,54 @@ struct TimesheetView: View {
                 }
             }
         }
+        .navigationDestination(for: Timesheet.self) { timesheet in
+            TimesheetDetailView(timesheet: timesheet)
+        }
     }
 
+    private func timesheetRow(timesheet: Timesheet) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 16) {
+                Text(timesheet.title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+
+                Spacer()
+
+                if timesheet.isComplete {
+                    Text("Completed")
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                        .padding(8)
+                        .background(Color.green.opacity(0.2))
+                        .cornerRadius(4)
+                } else {
+                    Text("Pending")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .padding(8)
+                        .background(Color.red.opacity(0.2))
+                        .cornerRadius(4)
+                }
+            }
+            .padding(.leading)
+
+            Text("\(timesheet.createdAt, style: .date)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.leading)
+
+            if let description = timesheet.description, !description.isEmpty {
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.leading)
+            }
+
+            SeparatorView()
+        }
+    }
 
     @ViewBuilder
     private var createTimesheetView: some View {

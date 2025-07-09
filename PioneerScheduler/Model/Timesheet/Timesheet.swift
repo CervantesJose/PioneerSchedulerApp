@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Timesheet: Identifiable, Codable {
+struct Timesheet: Identifiable, Codable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id
