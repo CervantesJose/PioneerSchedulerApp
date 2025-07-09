@@ -71,5 +71,5 @@ struct TimesheetDetailView: View {
             createdAt: Date()
         )
     )
-    .environmentObject(TimesheetViewModel())
+    .environmentObject(TimesheetViewModel.preview())
 }
