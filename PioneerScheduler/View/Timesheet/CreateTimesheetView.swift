@@ -11,7 +11,7 @@ struct CreateTimesheetView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Title")
@@ -77,9 +77,13 @@ struct CreateTimesheetView: View {
         .padding()
         .navigationTitle("Create timesheet")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(leading: Button("Cancel") {
-            viewModel.toggleIsCreatingNewItemSheetPresented()
-        })
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    viewModel.toggleIsCreatingNewItemSheetPresented()
+                }
+            }
+        }
     }
 }
 

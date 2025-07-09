@@ -61,8 +61,10 @@ struct TimesheetView: View {
                 }
             }
             .sheet(isPresented: $viewModel.isCreatingNewItemSheetPresented) {
-                CreateTimesheetView()
-                    .environmentObject(viewModel)
+                NavigationStack {
+                    CreateTimesheetView()
+                        .environmentObject(viewModel)
+                }
             }
         }
     }
