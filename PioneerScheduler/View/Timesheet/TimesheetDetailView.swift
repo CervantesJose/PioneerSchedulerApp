@@ -31,7 +31,15 @@ struct TimesheetDetailView: View {
             }
 
             Section(header: Text("Dates worked")) {
-                Text("\(timesheet.workDates ?? [])")
+                if let dates = timesheet.workDates {
+                    let formattedDates = dates
+                        .map { $0.formatted(date: .abbreviated, time: .omitted) }
+                        .joined(separator: ", ")
+
+                    Text("\(formattedDates)")
+                } else {
+                    Text("No dates selected")
+                }
             }
 
             // TODO

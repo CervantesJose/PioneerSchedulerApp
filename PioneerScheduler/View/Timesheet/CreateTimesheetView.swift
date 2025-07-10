@@ -9,14 +9,14 @@ import SwiftUI
 
 struct CreateTimesheetView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
+    @State private var selectedRange: DateRange?
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Title")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
+                        .sectionTitle()
 
                     TextField("Enter title", text: $viewModel.newTimesheetTitle)
                         .padding()
@@ -26,8 +26,7 @@ struct CreateTimesheetView: View {
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Description")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
+                        .sectionTitle()
 
                     ZStack(alignment: .topLeading) {
                         if viewModel.newTimesheetDescription.isEmpty {
@@ -49,7 +48,19 @@ struct CreateTimesheetView: View {
                     )
                 }
 
-                DatePicker("Select date", selection: $viewModel.newTimesheetDate)
+                Text("Days worked this week")
+                    .sectionTitle()
+
+                if let range = selectedRange {
+                    Text("From \(range.start.formatted(date: .long, time: .omitted)) to \(range.end.formatted(date: .long, time: .omitted))")
+                } else {
+                    Text("No range selected")
+                }
+
+                DateRangeSelectorView(month: .now)
+                    .environmentObject(DateRangeSelectorViewModelHolder(
+                        selectedRange: $selectedRange
+                    ))
 
                 Spacer()
 
@@ -85,9 +96,4 @@ struct CreateTimesheetView: View {
             }
         }
     }
-}
-
-#Preview {
-    CreateTimesheetView()
-        .environmentObject(TimesheetViewModel.preview())
 }
