@@ -20,7 +20,7 @@ struct DateRange: Equatable {
         let calendar = Calendar.current
         var dates: [Date] = []
         var current = calendar.startOfDay(for: start)
-        var endDay = calendar.startOfDay(for: end)
+        let endDay = calendar.startOfDay(for: end)
 
         while current <= endDay {
             dates.append(current)
