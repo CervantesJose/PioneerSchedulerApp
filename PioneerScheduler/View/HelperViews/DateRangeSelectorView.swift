@@ -11,6 +11,7 @@ import SwiftUI
 struct DateRangeSelectorView: View {
 
     @StateObject private var viewModel = DateRangeSelectorViewModel()
+    var container: DateRangeSelectorViewModelHolder
     let month: Date
     let calendar = Calendar.current
 
@@ -32,13 +33,13 @@ struct DateRangeSelectorView: View {
     }
 
     func makeDays() -> [Date] {
-        guard let monthInterval = calendar.dateInterval(of: .weekOfMonth, for: month) else {
+        guard let weekInterval = calendar.dateInterval(of: .weekOfMonth, for: month) else {
             return []
         }
         var dates: [Date] = []
-        var current = monthInterval.start
+        var current = weekInterval.start
 
-        while current <= monthInterval.end {
+        while current <= weekInterval.end {
             dates.append(current)
             current = calendar.date(byAdding: .day, value: 1, to: current)!
         }

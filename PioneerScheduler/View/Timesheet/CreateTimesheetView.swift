@@ -57,10 +57,7 @@ struct CreateTimesheetView: View {
                     Text("No range selected")
                 }
 
-                DateRangeSelectorView(month: .now)
-                    .environmentObject(DateRangeSelectorViewModelHolder(
-                        selectedRange: $selectedRange
-                    ))
+                DateRangeSelectorView(container: DateRangeSelectorViewModelHolder(selectedRange: $selectedRange), month: .now)
 
                 Spacer()
 

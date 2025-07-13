@@ -61,7 +61,7 @@ struct LoginView: View {
 
                     }
 
-                    OrSeperatorView()
+                    orSeparatorView()
 
                     SignInWithAppleButton { request in
                         request.requestedScopes = [.email, .fullName]
@@ -79,13 +79,8 @@ struct LoginView: View {
     }
 }
 
-#Preview {
-    LoginView(viewModel: AuthViewModel(appState: AppState()))
-}
-
-struct OrSeperatorView: View {
-    var body: some View {
-        HStack {
+private func orSeparatorView() -> some View {
+        return HStack {
             Rectangle()
                 .frame(height: 1)
                 .foregroundStyle(.secondary)
@@ -98,7 +93,6 @@ struct OrSeperatorView: View {
                 .foregroundStyle(.secondary)
         }
         .padding(.horizontal, 16)
-    }
 }
 
 struct BackgroundView: View {
