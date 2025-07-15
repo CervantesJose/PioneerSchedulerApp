@@ -28,6 +28,8 @@ class TimesheetViewModel: ObservableObject {
     @Published var isCreatingNewItemSheetPresented = false
     @Published var state: LoadingState = .idle
 
+    @Published var entries: [TimesheetEntry] = []
+
     init() { }
 
     func fetchTimesheets() async {
@@ -121,6 +123,14 @@ class TimesheetViewModel: ObservableObject {
         }
     }
 
+    func addEntry() {
+        entries.append(TimesheetEntry())
+    }
+
+    func removeEntry(at offsets: IndexSet) {
+        entries.remove(atOffsets: offsets)
+    }
+
     func markAsCompleted(id: UUID) async {
         do {
             try await supabase
@@ -177,6 +187,7 @@ extension TimesheetViewModel {
     static func preview() -> TimesheetViewModel {
         let vm = TimesheetViewModel()
         vm.timesheets = Timesheet.mockData()
+        vm.state = .loaded
         return vm
     }
 }

@@ -48,16 +48,30 @@ struct CreateTimesheetView: View {
                     )
                 }
 
-                Text("Days worked this week")
-                    .sectionTitle()
-
-                if let range = selectedRange {
-                    Text("From \(range.start.formatted(date: .long, time: .omitted)) to \(range.end.formatted(date: .long, time: .omitted))")
-                } else {
-                    Text("No range selected")
+                ForEach($viewModel.entries) { $entry in
+                    TimesheetRowView(entry: $entry)
+                }
+                .contentShape(Rectangle())
+                .swipeActions(edge: .leading) {
+                    Button(role: .destructive) {
+                        Task {
+                            viewModel.removeEntry
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
                 }
 
-                DateRangeSelectorView(container: DateRangeSelectorViewModelHolder(selectedRange: $selectedRange), month: .now)
+                Button(action: {
+                    viewModel.addEntry()
+                }) {
+                    Label("Add New Entry", systemImage: "plus")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundStyle(.white)
+                        .cornerRadius(8)
+                }
 
                 Spacer()
 
@@ -92,5 +106,13 @@ struct CreateTimesheetView: View {
                 }
             }
         }
+    }
+}
+
+struct CreateTimesheetView_Previews: PreviewProvider {
+    static let timesheetViewModel = TimesheetViewModel()
+    static var previews: some View {
+        CreateTimesheetView()
+            .environmentObject(timesheetViewModel)
     }
 }
