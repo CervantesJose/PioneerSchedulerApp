@@ -16,23 +16,23 @@ struct DateRangeSelectorView: View {
     let calendar = Calendar.current
 
     var body: some View {
-        let days = makeDays()
+        let week = makeWeek()
         ScrollView(.horizontal) {
             LazyHGrid(rows: [GridItem(.fixed(30))]) {
-                ForEach(days, id: \.self) { date in
-                    Text("\(calendar.component(.day, from: date))")
+                ForEach(week, id: \.self) { day in
+                    Text("\(calendar.component(.day, from: day))")
                         .frame(width: 44, height: 44)
                         .background {
-                            viewModel.contains(date: date) ? Color.blue.opacity(0.3) : Color.clear
+                            viewModel.contains(date: day) ? Color.blue.opacity(0.3) : Color.clear
                         }
                         .cornerRadius(4)
-                        .onTapGesture { viewModel.select(date) }
+                        .onTapGesture { viewModel.select(day) }
                 }
             }
         }
     }
 
-    func makeDays() -> [Date] {
+    func makeWeek() -> [Date] {
         guard let weekInterval = calendar.dateInterval(of: .weekOfMonth, for: month) else {
             return []
         }
