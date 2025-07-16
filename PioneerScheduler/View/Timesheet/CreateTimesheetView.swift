@@ -83,12 +83,9 @@ struct CreateTimesheetView: View {
     }
 }
 
-struct CreateTimesheetView_Previews: PreviewProvider {
-    static let timesheetViewModel = TimesheetViewModel()
-    static var previews: some View {
-        NavigationStack {
-            CreateTimesheetView()
-                .environmentObject(timesheetViewModel)
-        }
+#Preview {
+    NavigationStack {
+        CreateTimesheetView()
+            .environmentObject(TimesheetViewModel.preview())
     }
 }
