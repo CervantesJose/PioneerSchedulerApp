@@ -13,39 +13,13 @@ struct CreateTimesheetView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Title")
-                        .sectionTitle()
 
+            VStack(alignment: .leading, spacing: 20) {
+                Section("Title") {
                     TextField("Enter title", text: $viewModel.newTimesheetTitle)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
-                }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Description")
-                        .sectionTitle()
-
-                    ZStack(alignment: .topLeading) {
-                        if viewModel.newTimesheetDescription.isEmpty {
-                            Text("Enter description...")
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 12)
-                                .allowsHitTesting(false)
-                        }
-
-                        TextEditor(text: $viewModel.newTimesheetDescription)
-                            .frame(minHeight: 100, maxHeight: 200)
-                            .scrollContentBackground(.hidden)
-                            .padding(4)
-                    }
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(.secondarySystemBackground))
-                    )
                 }
 
                 ForEach($viewModel.entries) { $entry in
@@ -80,7 +54,7 @@ struct CreateTimesheetView: View {
                         await viewModel
                             .addTimesheet(
                                 title: viewModel.newTimesheetTitle,
-                                description: viewModel.newTimesheetDescription,
+                                description: viewModel.entries.first?.taskDescription,
                                 workDates: [viewModel.newTimesheetDate]
                             )
                     }
@@ -112,7 +86,9 @@ struct CreateTimesheetView: View {
 struct CreateTimesheetView_Previews: PreviewProvider {
     static let timesheetViewModel = TimesheetViewModel()
     static var previews: some View {
-        CreateTimesheetView()
-            .environmentObject(timesheetViewModel)
+        NavigationStack {
+            CreateTimesheetView()
+                .environmentObject(timesheetViewModel)
+        }
     }
 }

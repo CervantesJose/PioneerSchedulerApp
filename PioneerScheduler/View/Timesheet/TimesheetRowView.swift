@@ -16,7 +16,9 @@ struct TimesheetRowView: View {
             DatePicker("Date", selection: $entry.date, displayedComponents: .date)
 
             TextField("Description", text: $entry.taskDescription)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(10)
 
             HStack {
                 DatePicker("Start", selection: $entry.timeStart, displayedComponents: .hourAndMinute)
