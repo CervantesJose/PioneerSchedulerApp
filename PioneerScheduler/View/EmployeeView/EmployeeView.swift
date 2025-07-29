@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct EmployeeView: View {
-    @ObservedObject var vm: EmployeeViewModel
-    
+    @ObservedObject var vm: TimesheetViewModel
+
     @State private var hoursWorked: String = ""
     @State private var locationOfWork: String = ""
     @State private var timesheets: [Timesheet] = []
@@ -62,9 +62,5 @@ struct EmployeeView: View {
 }
 
 #Preview {
-    if let mockEmployee = EmployeeViewModel.mock.employees.first {
-        EmployeeView(vm: EmployeeViewModel.mock, employeeId: mockEmployee.id)
-    } else {
-        Text("No employee found")
-    }
+    EmployeeView(vm: TimesheetViewModel(), employeeId: UUID())
 }
