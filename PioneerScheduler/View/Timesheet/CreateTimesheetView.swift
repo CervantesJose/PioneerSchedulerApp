@@ -9,31 +9,36 @@ import SwiftUI
 
 struct CreateTimesheetView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
-    @State private var selectedRange: DateRange?
+    @State private var startDate: Date = .now
+    @State private var endDate: Date = Date(timeIntervalSinceNow: 186000)
 
     var body: some View {
         NavigationStack {
 
             VStack(alignment: .leading, spacing: 20) {
-                Section("Title") {
-                    TextField("Enter title", text: $viewModel.newTimesheetTitle)
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(10)
+                Section("Week of:") {
+                    HStack {
+                        DatePicker("", selection: $startDate, displayedComponents: .date)
+                        DatePicker("", selection: $endDate, displayedComponents: .date)
+                    }
                 }
 
-                ForEach($viewModel.entries) { $entry in
-                    TimesheetRowView(entry: $entry)
-                }
-                .contentShape(Rectangle())
-                .swipeActions(edge: .leading) {
-                    Button(role: .destructive) {
-                        Task {
-                            viewModel.removeEntry
+                Section("Entries") {
+                    List {
+                        ForEach($viewModel.entries) { $entry in
+                            TimesheetRowView(entry: $entry)
+                                .swipeActions(edge: .trailing) {
+                                    Button(role: .destructive) {
+                                        Task {
+                                            viewModel.removeEntry
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                         }
-                    } label: {
-                        Label("Delete", systemImage: "trash")
                     }
+                    .listStyle(.plain)
                 }
 
                 Button(action: {
@@ -69,6 +74,9 @@ struct CreateTimesheetView: View {
 
                 Spacer()
             }
+        }
+        .onAppear {
+            viewModel.addEntry()
         }
         .padding()
         .navigationTitle("Create timesheet")

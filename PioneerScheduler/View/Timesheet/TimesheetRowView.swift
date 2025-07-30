@@ -29,6 +29,21 @@ struct TimesheetRowView: View {
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .cornerRadius(10)
+
+            HStack {
+                Spacer()
+
+                Button("Add Photos") {
+                    // Show Photos
+                }
+                .buttonStyle(.borderedProminent)
+                Button("Show photos") {
+                    // camera
+                }
+                .buttonStyle(.bordered)
+
+                Spacer()
+            }
         }
     }
 }
