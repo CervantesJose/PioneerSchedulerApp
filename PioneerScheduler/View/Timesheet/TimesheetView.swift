@@ -96,42 +96,40 @@ struct TimesheetView: View {
 
     @ViewBuilder
     private var listView: some View {
-        List {
-            ForEach(viewModel.timesheets, id: \.id) { timesheet in
-                NavigationLink(value: timesheet) {
-                    timesheetRow(timesheet: timesheet)
+        List(viewModel.timesheets) { timesheet in
+            NavigationLink(value: timesheet) {
+                timesheetRow(timesheet: timesheet)
+            }
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets())
+            .swipeActions(edge: .leading) {
+                Button(role: .destructive) {
+                    Task {
+                        await viewModel.deleteTimesheet(id: timesheet.id)
+                    }
+                } label: {
+                    Label("Delete", systemImage: "trash")
                 }
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets())
-                .swipeActions(edge: .leading) {
-                    Button(role: .destructive) {
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                if timesheet.isComplete == false {
+                    Button {
                         Task {
-                            await viewModel.deleteTimesheet(id: timesheet.id)
+                            await viewModel.markAsCompleted(id: timesheet.id)
                         }
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("Complete", systemImage: "checkmark.circle")
                     }
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    if timesheet.isComplete == false {
-                        Button {
-                            Task {
-                                await viewModel.markAsCompleted(id: timesheet.id)
-                            }
-                        } label: {
-                            Label("Complete", systemImage: "checkmark.circle")
+                    .tint(.green)
+                } else {
+                    Button {
+                        Task {
+                            await viewModel.markAsIncomplete(id: timesheet.id)
                         }
-                        .tint(.green)
-                    } else {
-                        Button {
-                            Task {
-                                await viewModel.markAsIncomplete(id: timesheet.id)
-                            }
-                        } label: {
-                            Label("Incomplete", systemImage: "x.circle")
-                        }
-                        .tint(.orange)
+                    } label: {
+                        Label("Incomplete", systemImage: "x.circle")
                     }
+                    .tint(.orange)
                 }
             }
         }
