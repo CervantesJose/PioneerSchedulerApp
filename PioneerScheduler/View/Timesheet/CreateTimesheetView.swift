@@ -24,19 +24,17 @@ struct CreateTimesheetView: View {
                 }
 
                 Section("Entries") {
-                    List {
-                        ForEach($viewModel.entries) { $entry in
-                            TimesheetRowView(entry: $entry)
-                                .swipeActions(edge: .trailing) {
-                                    Button(role: .destructive) {
-                                        Task {
-                                            viewModel.removeEntry
-                                        }
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
+                    List($viewModel.entries) { $entry in
+                        TimesheetRowView(entry: $entry)
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    Task {
+                                        viewModel.removeEntry
                                     }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
-                        }
+                            }
                     }
                     .listStyle(.plain)
                 }
