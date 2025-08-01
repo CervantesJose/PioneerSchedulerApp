@@ -9,16 +9,23 @@ import SwiftUI
 
 struct TimesheetRowView: View {
     @Binding var entry: TimesheetEntry
+    @State private var descriptions: [String] = [""]
 
     var body: some View {
 
         VStack(alignment: .leading, spacing: 10) {
             DatePicker("Date", selection: $entry.date, displayedComponents: .date)
 
-            TextField("Description", text: $entry.taskDescription)
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(10)
+            ForEach(descriptions.indices, id: \.self) { index in
+                TextField("Task description", text: $descriptions[index])
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(10)
+            }
+
+            Button("Add description") {
+                descriptions.append("")
+            }
 
             HStack {
                 DatePicker("Start", selection: $entry.timeStart, displayedComponents: .hourAndMinute)
