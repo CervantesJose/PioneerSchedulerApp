@@ -11,6 +11,8 @@ struct CreateTimesheetView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
     @State private var startDate: Date = .now
     @State private var endDate: Date = Date(timeIntervalSinceNow: 186000)
+    @State private var title = ""
+    @State private var description = ""
 
     var body: some View {
         NavigationStack {
@@ -23,32 +25,11 @@ struct CreateTimesheetView: View {
                     }
                 }
 
-                Section("Entries") {
-                    List($viewModel.entries) { $entry in
-                        TimesheetRowView(entry: $entry)
-                            .swipeActions(edge: .trailing) {
-                                Button(role: .destructive) {
-                                    Task {
-                                        viewModel.removeEntry
-                                    }
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                    }
-                    .listStyle(.plain)
-                }
+                TextField("Title", text: $title)
+                    .pioneerTextField()
 
-                Button(action: {
-                    viewModel.addEntry()
-                }) {
-                    Label("Add New Entry", systemImage: "plus")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .cornerRadius(8)
-                }
+                TextField("Description", text: $description)
+                    .pioneerTextField()
 
                 Spacer()
 
@@ -69,12 +50,7 @@ struct CreateTimesheetView: View {
                 .buttonStyle(.borderedProminent)
                 .clipShape(.capsule)
                 .frame(maxWidth: .infinity)
-
-                Spacer()
             }
-        }
-        .onAppear {
-            viewModel.addEntry()
         }
         .padding()
         .navigationTitle("Create timesheet")

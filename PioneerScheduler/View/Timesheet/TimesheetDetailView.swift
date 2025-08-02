@@ -24,10 +24,31 @@ struct TimesheetDetailView: View {
                     .backgroundStyle(.regularMaterial)
             }
 
-            Section(header: Text("Description")) {
-                TextEditor(text: $editedDescription)
-                    .frame(minHeight: 100, maxHeight: 200)
-                    .backgroundStyle(.regularMaterial)
+            Section("Entries") {
+                List($viewModel.entries) { $entry in
+                    TimesheetRowView(entry: $entry)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                Task {
+                                    viewModel.removeEntry
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                }
+                .listStyle(.plain)
+            }
+
+            Button(action: {
+                viewModel.addEntry()
+            }) {
+                Label("Add New Entry", systemImage: "plus")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .cornerRadius(8)
             }
 
             Section(header: Text("Dates worked")) {

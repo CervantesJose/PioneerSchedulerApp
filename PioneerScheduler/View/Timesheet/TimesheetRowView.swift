@@ -14,16 +14,26 @@ struct TimesheetRowView: View {
     var body: some View {
 
         VStack(alignment: .leading, spacing: 10) {
-            DatePicker("Date", selection: $entry.date, displayedComponents: .date)
+            HStack {
+                DatePicker("Date", selection: $entry.date, displayedComponents: .date)
+
+                Button("Add", systemImage: "photo") {
+                    // Show Photos
+                }
+                .buttonStyle(.borderedProminent)
+
+                Button("Show", systemImage: "photo") {
+                    // camera
+                }
+                .buttonStyle(.bordered)
+            }
 
             ForEach(descriptions.indices, id: \.self) { index in
                 TextField("Task description", text: $descriptions[index])
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(10)
+                    .pioneerTextField()
             }
 
-            Button("Add description") {
+            Button("Add task") {
                 descriptions.append("")
             }
 
@@ -36,22 +46,16 @@ struct TimesheetRowView: View {
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .cornerRadius(10)
-
-            HStack {
-                Spacer()
-
-                Button("Add Photos") {
-                    // Show Photos
-                }
-                .buttonStyle(.borderedProminent)
-                Button("Show photos") {
-                    // camera
-                }
-                .buttonStyle(.bordered)
-
-                Spacer()
-            }
         }
+        .onAppear(perform: setTimes)
+    }
+
+    func setTimes() {
+        var components = DateComponents()
+        let calendar = Calendar.current
+        components.hour = 8
+        let startTime = calendar.date(from: components)
+        entry.timeStart = startTime ?? .now
     }
 }
 
