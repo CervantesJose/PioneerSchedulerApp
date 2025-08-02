@@ -19,6 +19,7 @@ final class AuthViewModel {
     var userPassword = ""
     var isAuthenticated = false
 
+    var isLoading = false
     var isShowingAlert = false
     var alertTitle = ""
     var alertMessage = ""
@@ -46,6 +47,12 @@ final class AuthViewModel {
         isShowingAlert = true
     }
 
+    func toggleLoadingState() {
+        withAnimation {
+            isLoading.toggle()
+        }
+    }
+
     // MARK: Authentication methods
 
     // Login with email
@@ -67,6 +74,10 @@ final class AuthViewModel {
 
     @MainActor
     private func signIn() async {
+        toggleLoadingState()
+
+        defer { toggleLoadingState() }
+
         do {
             try await supabase.auth.signIn(
                 email: userEmail,
@@ -113,6 +124,9 @@ final class AuthViewModel {
     }
 
     private func signInWithApple(credential: ASAuthorizationAppleIDCredential) async {
+        toggleLoadingState()
+
+        defer { toggleLoadingState() }
 
         let newViewModel = TimesheetViewModel()
         self.timesheetViewModel = newViewModel
@@ -149,6 +163,11 @@ final class AuthViewModel {
 
     @MainActor
     private func register() async {
+        toggleLoadingState()
+        
+        defer {
+            toggleLoadingState()
+        }
         
         do {
             try await supabase.auth.signUp(
