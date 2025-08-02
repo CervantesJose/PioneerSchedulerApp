@@ -142,7 +142,6 @@ final class AuthViewModel {
             authResult = .success(())
             appState.isAuthenticated = .loading
             await appState.checkLoginStatus()
-            await timesheetViewModel.fetchTimesheets()
         } catch {
             authResult = .failure(error)
         }
