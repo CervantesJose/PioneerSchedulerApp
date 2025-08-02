@@ -100,36 +100,14 @@ struct TimesheetView: View {
             NavigationLink(value: timesheet) {
                 timesheetRow(timesheet: timesheet)
             }
-            .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets())
-            .swipeActions(edge: .leading) {
+            .swipeActions(edge: .trailing) {
                 Button(role: .destructive) {
                     Task {
                         await viewModel.deleteTimesheet(id: timesheet.id)
                     }
                 } label: {
                     Label("Delete", systemImage: "trash")
-                }
-            }
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                if timesheet.isComplete == false {
-                    Button {
-                        Task {
-                            await viewModel.markAsCompleted(id: timesheet.id)
-                        }
-                    } label: {
-                        Label("Complete", systemImage: "checkmark.circle")
-                    }
-                    .tint(.green)
-                } else {
-                    Button {
-                        Task {
-                            await viewModel.markAsIncomplete(id: timesheet.id)
-                        }
-                    } label: {
-                        Label("Incomplete", systemImage: "x.circle")
-                    }
-                    .tint(.orange)
                 }
             }
         }
@@ -139,47 +117,31 @@ struct TimesheetView: View {
     }
 
     private func timesheetRow(timesheet: Timesheet) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 16) {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(timesheet.title)
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .lineLimit(1)
 
-                Spacer()
+                Text("\(timesheet.createdAt, style: .date)")
+                    .font(.body)
 
-                if timesheet.isComplete {
-                    Text("Completed")
-                        .font(.caption)
-                        .foregroundStyle(.green)
-                        .padding(8)
-                        .background(Color.green.opacity(0.2))
-                        .cornerRadius(4)
-                } else {
-                    Text("Pending")
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .padding(8)
-                        .background(Color.red.opacity(0.2))
-                        .cornerRadius(4)
+                if let description = timesheet.description, !description.isEmpty {
+                    Text(description)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
             }
-            .padding(.leading)
 
-            Text("\(timesheet.createdAt, style: .date)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.leading)
+            Spacer()
 
-            if let description = timesheet.description, !description.isEmpty {
-                Text(description)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .padding(.leading)
+            VStack {
+                Text("Hours")
+                Text("0")
             }
-
-            SeparatorView()
         }
+        .padding()
     }
 }
 
