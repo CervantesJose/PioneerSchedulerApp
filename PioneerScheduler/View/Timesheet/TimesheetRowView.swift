@@ -14,19 +14,7 @@ struct TimesheetRowView: View {
     var body: some View {
 
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                DatePicker("Date", selection: $entry.date, displayedComponents: .date)
-
-                Button("Add", systemImage: "photo") {
-                    // Show Photos
-                }
-                .buttonStyle(.borderedProminent)
-
-                Button("Show", systemImage: "photo") {
-                    // camera
-                }
-                .buttonStyle(.bordered)
-            }
+            DatePicker("Date", selection: $entry.date, displayedComponents: .date)
 
             ForEach(descriptions.indices, id: \.self) { index in
                 TextField("Task description", text: $descriptions[index])
@@ -47,15 +35,6 @@ struct TimesheetRowView: View {
                 .foregroundColor(.secondary)
                 .cornerRadius(10)
         }
-        .onAppear(perform: setTimes)
-    }
-
-    func setTimes() {
-        var components = DateComponents()
-        let calendar = Calendar.current
-        components.hour = 8
-        let startTime = calendar.date(from: components)
-        entry.timeStart = startTime ?? .now
     }
 }
 

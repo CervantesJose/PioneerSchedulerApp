@@ -24,7 +24,7 @@ struct TimesheetDetailView: View {
                     .backgroundStyle(.regularMaterial)
             }
 
-            Section("Entries") {
+            Section("Workdays") {
                 List($viewModel.entries) { $entry in
                     TimesheetRowView(entry: $entry)
                         .swipeActions(edge: .trailing) {
@@ -37,21 +37,20 @@ struct TimesheetDetailView: View {
                             }
                         }
                 }
-                .listStyle(.plain)
+
+                Button(action: {
+                    viewModel.addEntry()
+                }) {
+                    Label("Add workday", systemImage: "plus")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundStyle(.white)
+                        .cornerRadius(8)
+                }
             }
 
-            Button(action: {
-                viewModel.addEntry()
-            }) {
-                Label("Add New Entry", systemImage: "plus")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundStyle(.white)
-                    .cornerRadius(8)
-            }
-
-            Section(header: Text("Dates worked")) {
+            Section(header: Text("Total hours")) {
                 if let dates = timesheet.workDates {
                     let formattedDates = dates
                         .map { $0.formatted(date: .abbreviated, time: .omitted) }
@@ -59,12 +58,9 @@ struct TimesheetDetailView: View {
 
                     Text("\(formattedDates)")
                 } else {
-                    Text("No dates selected")
+                    Text("0")
                 }
             }
-
-            // TODO
-            // Datepicker to come
         }
         .onAppear {
             if editedTitle.isEmpty && editedDescription.isEmpty {
