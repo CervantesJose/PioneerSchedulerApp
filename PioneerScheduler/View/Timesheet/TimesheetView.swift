@@ -64,6 +64,7 @@ struct TimesheetView: View {
                 NavigationStack {
                     CreateTimesheetView()
                         .environmentObject(viewModel)
+                        .presentationDetents([.medium])
                 }
             }
         }
