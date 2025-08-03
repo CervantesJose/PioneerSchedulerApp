@@ -130,39 +130,7 @@ class TimesheetViewModel: ObservableObject {
     func removeEntry(at offsets: IndexSet) {
         entries.remove(atOffsets: offsets)
     }
-
-    func markAsCompleted(id: UUID) async {
-        do {
-            try await supabase
-                .from("timesheets")
-                .update(["is_complete": true])
-                .eq("id", value: id)
-                .execute()
-
-            if let index = timesheets.firstIndex(where: { $0.id == id }) {
-                timesheets[index].isComplete = true
-            }
-        } catch {
-            print("Error marking timesheet as completed: \(error)")
-        }
-    }
-
-    func markAsIncomplete(id: UUID) async {
-        do {
-            try await supabase
-                .from("timesheets")
-                .update(["is_complete": false])
-                .eq("id", value: id)
-                .execute()
-
-            if let index = timesheets.firstIndex(where: { $0.id == id }) {
-                timesheets[index].isComplete = false
-            }
-        } catch {
-            print("Error marking timesheet as incomplete: \(error)")
-        }
-    }
-
+    
     func getUserID() async -> UUID? {
         do {
             return try await supabase.auth.user().id
