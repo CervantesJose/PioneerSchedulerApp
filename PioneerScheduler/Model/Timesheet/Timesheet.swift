@@ -21,5 +21,5 @@ struct Timesheet: Identifiable, Codable, Hashable {
     var title: String?
     var userId: UUID
     var totalHours: Double?
-    var workdays: [Workday] = []
+    var workdays: [Workday]?
 }

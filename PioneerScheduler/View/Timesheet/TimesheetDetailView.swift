@@ -13,7 +13,6 @@ struct TimesheetDetailView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
 
     @State private var editedTitle = ""
-    @State private var editedDescription = ""
     @State private var editedDate: Date? = nil
 
     var body: some View {
@@ -53,7 +52,7 @@ struct TimesheetDetailView: View {
                 Text("0")
             }
             .onAppear {
-                if editedTitle.isEmpty && editedDescription.isEmpty {
+                if editedTitle.isEmpty {
                     editedTitle = timesheet.title ?? ""
                 }
             }
@@ -63,9 +62,7 @@ struct TimesheetDetailView: View {
                         Task {
                             await viewModel.updateTimesheet(
                                 id: timesheet.id,
-                                title: editedTitle,
-                                description: editedDescription,
-                                workDates: editedDate.map { [$0] }
+                                title: editedTitle
                             )
                         }
                         dismiss()

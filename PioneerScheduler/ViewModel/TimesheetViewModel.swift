@@ -22,7 +22,6 @@ class TimesheetViewModel: ObservableObject {
     @Published var timesheets: [Timesheet] = []
 
     @Published var newTimesheetTitle = ""
-    @Published var newTimesheetDescription = ""
     @Published var newTimesheetDate: Date = .now
 
     @Published var isCreatingNewItemSheetPresented = false
@@ -52,7 +51,7 @@ class TimesheetViewModel: ObservableObject {
         }
     }
 
-    func addTimesheet(title: String, description: String?, workDates: [Date]?) async {
+    func addTimesheet(title: String) async {
         if let userID = await getUserID() {
             let newTimesheet = Timesheet(
                 id: UUID(),
@@ -81,22 +80,15 @@ class TimesheetViewModel: ObservableObject {
         }
 
         newTimesheetTitle = ""
-        newTimesheetDescription = ""
         workdays.removeAll()
     }
 
-    func updateTimesheet(id: UUID, title: String, description: String?, workDates: [Date]?) async {
-
-        let workDateStrings = iso8601Strings(from: workDates ?? [])
-        let postgresArrayString = "{" + workDateStrings.map { "\"\($0)\"" }.joined(separator: ",") + "}"
-
+    func updateTimesheet(id: UUID, title: String) async {
         do {
             try await supabase
                 .from("timesheets")
                 .update([
-                    "title": title,
-                    "description": description ?? "",
-                    "work_dates": postgresArrayString
+                    "title": title
                     ])
                 .eq("id", value: id)
                 .execute()
@@ -144,11 +136,6 @@ class TimesheetViewModel: ObservableObject {
 
     func toggleIsCreatingNewItemSheetPresented() {
         self.isCreatingNewItemSheetPresented.toggle()
-    }
-
-    private func iso8601Strings(from dates: [Date]) -> [String] {
-        let formatter = ISO8601DateFormatter()
-        return dates.map { formatter.string(from: $0) }
     }
 }
 
