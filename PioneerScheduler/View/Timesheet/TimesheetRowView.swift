@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct TimesheetRowView: View {
-    @Binding var entry: TimesheetEntry
+    @Binding var workday: Workday
     @State private var descriptions: [String] = [""]
 
     var body: some View {
 
         VStack(alignment: .leading, spacing: 10) {
-            DatePicker("Date", selection: $entry.date, displayedComponents: .date)
+            DatePicker("Date", selection: $workday.date, displayedComponents: .date)
 
             ForEach(descriptions.indices, id: \.self) { index in
                 TextField("Task description", text: $descriptions[index])
@@ -26,11 +26,11 @@ struct TimesheetRowView: View {
             }
 
             HStack {
-                DatePicker("Start", selection: $entry.timeStart, displayedComponents: .hourAndMinute)
-                DatePicker("End", selection: $entry.timeEnd, displayedComponents: .hourAndMinute)
+                DatePicker("Start", selection: $workday.timeStart, displayedComponents: .hourAndMinute)
+                DatePicker("End", selection: $workday.timeEnd, displayedComponents: .hourAndMinute)
             }
 
-            Text("Time worked: \(entry.totalTimeFormatted)")
+            Text("Time worked: \(workday.totalTimeFormatted)")
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .cornerRadius(10)
@@ -40,9 +40,9 @@ struct TimesheetRowView: View {
 
 #Preview {
     struct Preview: View {
-        @State private var timesheet = TimesheetEntry()
+        @State private var timesheet = Workday()
         var body: some View {
-            TimesheetRowView(entry: $timesheet)
+            TimesheetRowView(workday: $timesheet)
         }
     }
 

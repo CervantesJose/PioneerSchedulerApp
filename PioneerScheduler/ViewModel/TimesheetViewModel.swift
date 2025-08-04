@@ -28,7 +28,7 @@ class TimesheetViewModel: ObservableObject {
     @Published var isCreatingNewItemSheetPresented = false
     @Published var state: LoadingState = .idle
 
-    @Published var entries: [TimesheetEntry] = []
+    @Published var workdays: [Workday] = []
 
     init() { }
 
@@ -123,12 +123,12 @@ class TimesheetViewModel: ObservableObject {
         }
     }
 
-    func addEntry() {
-        entries.append(TimesheetEntry())
+    func addWorkday() {
+        workdays.append(Workday())
     }
 
     func removeEntry(at offsets: IndexSet) {
-        entries.remove(atOffsets: offsets)
+        workdays.remove(atOffsets: offsets)
     }
     
     func getUserID() async -> UUID? {

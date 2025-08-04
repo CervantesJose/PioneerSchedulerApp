@@ -25,8 +25,8 @@ struct TimesheetDetailView: View {
             }
 
             Section("Workdays") {
-                List($viewModel.entries) { $entry in
-                    TimesheetRowView(entry: $entry)
+                List($viewModel.workdays) { $workday in
+                    TimesheetRowView(workday: $workday)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
                                 Task {
@@ -39,7 +39,7 @@ struct TimesheetDetailView: View {
                 }
 
                 Button(action: {
-                    viewModel.addEntry()
+                    viewModel.addWorkday()
                 }) {
                     Label("Add workday", systemImage: "plus")
                         .padding()

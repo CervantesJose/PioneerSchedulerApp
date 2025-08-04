@@ -38,7 +38,7 @@ struct CreateTimesheetView: View {
                         await viewModel
                             .addTimesheet(
                                 title: viewModel.newTimesheetTitle,
-                                description: viewModel.entries.first?.taskDescription,
+                                description: viewModel.workdays.first?.taskDescription,
                                 workDates: [viewModel.newTimesheetDate]
                             )
                     }
