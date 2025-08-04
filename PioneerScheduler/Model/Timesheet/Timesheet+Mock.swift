@@ -10,45 +10,41 @@ import Foundation
 extension Timesheet {
     static func mockData() -> [Timesheet] {
         [
-            Timesheet(id: UUID(),
-                      title: "Mock timesheet",
-                      description: "Test string",
-                      isComplete: false,
-                      userId: UUID(),
-                      createdAt: .now,
-                      workDates: [Date(), Date(timeIntervalSinceNow: -186000)]
-                     ),
-            Timesheet(id: UUID(),
-                      title: "Mock timesheet 2",
-                      description: "Test string 2",
-                      isComplete: false,
-                      userId: UUID(),
-                      createdAt: .now
-                     ),
-            Timesheet(id: UUID(),
-                      title: "Mock timesheet 3",
-                      description: "Test string 3",
-                      isComplete: false,
-                      userId: UUID(),
-                      createdAt: .now
-                     )
+            Timesheet(
+                id: UUID(),
+                title: "Mock timesheet",
+                userId: UUID(),
+                totalHours: 8,
+                workdays: Workday.mockData(),
+            ),
+            Timesheet(
+                id: UUID(),
+                title: "Mock timesheet 2",
+                userId: UUID(),
+                totalHours: 16,
+                workdays: []
+            ),
+            Timesheet(
+                id: UUID(),
+                title: "Mock timesheet 3",
+                userId: UUID(),
+                totalHours: 48,
+                workdays: []
+            )
         ]
     }
 
     init(
-            title: String,
-            description: String?,
-            isComplete: Bool = false,
-            userId: UUID,
-            createdAt: Date = .now,
-            workDates: [Date]? = nil
-        ) {
-            self.id = UUID()
-            self.title = title
-            self.description = description
-            self.isComplete = isComplete
-            self.userId = userId
-            self.createdAt = createdAt
-            self.workDates = workDates
-        }
+        id: UUID,
+        title: String,
+        userId: UUID,
+        totalHours: Double,
+        workdays: [Workday]
+    ) {
+        self.id = id
+        self.title = title
+        self.userId = userId
+        self.totalHours = totalHours
+        self.workdays = workdays
+    }
 }

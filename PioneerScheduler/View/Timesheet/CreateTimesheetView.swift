@@ -12,7 +12,6 @@ struct CreateTimesheetView: View {
     @State private var startDate: Date = .now
     @State private var endDate: Date = Date(timeIntervalSinceNow: 186000)
     @State private var title = ""
-    @State private var description = ""
 
     var body: some View {
         NavigationStack {
@@ -28,9 +27,6 @@ struct CreateTimesheetView: View {
                 TextField("Title", text: $title)
                     .pioneerTextField()
 
-                TextField("Description", text: $description)
-                    .pioneerTextField()
-
                 Spacer()
 
                 Button {
@@ -38,7 +34,7 @@ struct CreateTimesheetView: View {
                         await viewModel
                             .addTimesheet(
                                 title: viewModel.newTimesheetTitle,
-                                description: viewModel.workdays.first?.taskDescription,
+                                description: viewModel.newTimesheetDescription,
                                 workDates: [viewModel.newTimesheetDate]
                             )
                     }

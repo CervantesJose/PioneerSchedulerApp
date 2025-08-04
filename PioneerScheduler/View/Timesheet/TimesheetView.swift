@@ -120,19 +120,13 @@ struct TimesheetView: View {
     private func timesheetRow(timesheet: Timesheet) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(timesheet.title)
+                Text(timesheet.title ?? "")
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .lineLimit(1)
 
-                Text("\(timesheet.createdAt, style: .date)")
+                Text("\(timesheet.totalHours ?? 0)")
                     .font(.body)
-
-                if let description = timesheet.description, !description.isEmpty {
-                    Text(description)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
             }
 
             Spacer()

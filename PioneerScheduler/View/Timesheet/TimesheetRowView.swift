@@ -30,7 +30,7 @@ struct TimesheetRowView: View {
                 DatePicker("End", selection: $workday.timeEnd, displayedComponents: .hourAndMinute)
             }
 
-            Text("Time worked: \(workday.totalTimeFormatted)")
+            Text("Time worked: \(workday.timeWorked)")
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .cornerRadius(10)

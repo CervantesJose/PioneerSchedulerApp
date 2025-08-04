@@ -57,11 +57,7 @@ class TimesheetViewModel: ObservableObject {
             let newTimesheet = Timesheet(
                 id: UUID(),
                 title: title,
-                description: description,
-                isComplete: false,
-                userId: userID,
-                createdAt: .now,
-                workDates: workDates
+                userId: userID
             )
 
             do {
@@ -70,9 +66,15 @@ class TimesheetViewModel: ObservableObject {
                     .insert(newTimesheet)
                     .execute()
 
-                toggleIsCreatingNewItemSheetPresented()
+                for workday in workdays {
+                    try await supabase
+                        .from("workdays")
+                        .insert(workday)
+                        .execute()
+                }
 
                 timesheets.insert(newTimesheet, at: 0)
+                toggleIsCreatingNewItemSheetPresented()
             } catch {
                 print("Error adding timesheet: \(error)")
             }
@@ -80,6 +82,7 @@ class TimesheetViewModel: ObservableObject {
 
         newTimesheetTitle = ""
         newTimesheetDescription = ""
+        workdays.removeAll()
     }
 
     func updateTimesheet(id: UUID, title: String, description: String?, workDates: [Date]?) async {
@@ -100,7 +103,6 @@ class TimesheetViewModel: ObservableObject {
 
             if let index = timesheets.firstIndex(where: { $0.id == id }) {
                 timesheets[index].title = title
-                timesheets[index].description = description ?? ""
             }
         } catch {
             print(error.localizedDescription)

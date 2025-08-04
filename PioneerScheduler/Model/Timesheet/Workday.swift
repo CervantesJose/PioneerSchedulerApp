@@ -7,20 +7,29 @@
 
 import Foundation
 
-struct Workday: Identifiable {
-    var id: UUID = UUID()
-    var date: Date = Date()
-    var taskDescription: String?
-    var timeStart: Date = Date()
-    var timeEnd: Date = Date()
+struct Workday: Codable, Identifiable, Hashable {
 
-    var totalTime: TimeInterval {
-        return timeEnd.timeIntervalSince(timeStart)
-    }
+    let id: UUID
+    var date: Date
+    var task: [String]?
+    var timeStart: Date
+    var timeEnd: Date
 
-    var totalTimeFormatted: String {
-        let hours = Int(totalTime) / 3600
-        let minutes = (Int(totalTime) % 3600) / 60
-        return "\(hours)h \(minutes)m"
+    var timeWorked: Double
+//    : TimeInterval {
+//        return timeEnd.timeIntervalSince(timeStart)
+//    }
+//
+//    var totalTimeFormatted: String {
+//        let hours = Int(timeWorked) / 3600
+//        let minutes = (Int(timeWorked) % 3600) / 60
+//        return "\(hours)h \(minutes)m"
+//    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, date, task
+        case timeStart = "time_start"
+        case timeEnd = "time_end"
+        case timeWorked = "time_worked"
     }
 }

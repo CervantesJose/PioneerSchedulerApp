@@ -12,18 +12,14 @@ struct Timesheet: Identifiable, Codable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id
         case title
-        case description
-        case isComplete = "is_complete"
         case userId = "user_id"
-        case createdAt = "created_at"
-        case workDates = "work_dates"
+        case totalHours = "total_hours"
+        case workdays
     }
 
     var id: UUID
-    var title: String
-    var description: String?
-    var isComplete: Bool
+    var title: String?
     var userId: UUID
-    var createdAt: Date
-    var workDates: [Date]?
+    var totalHours: Double?
+    var workdays: [Workday] = []
 }

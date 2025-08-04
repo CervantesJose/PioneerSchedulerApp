@@ -17,13 +17,12 @@ struct TimesheetDetailView: View {
     @State private var editedDate: Date? = nil
 
     var body: some View {
+        
         Form {
-
             Section(header: Text("Title")) {
                 TextField(editedTitle, text: $editedTitle)
-                    .backgroundStyle(.regularMaterial)
             }
-
+            
             Section("Workdays") {
                 List($viewModel.workdays) { $workday in
                     TimesheetRowView(workday: $workday)
@@ -37,7 +36,7 @@ struct TimesheetDetailView: View {
                             }
                         }
                 }
-
+                
                 Button(action: {
                     viewModel.addWorkday()
                 }) {
@@ -49,37 +48,28 @@ struct TimesheetDetailView: View {
                         .cornerRadius(8)
                 }
             }
-
+            
             Section(header: Text("Total hours")) {
-                if let dates = timesheet.workDates {
-                    let formattedDates = dates
-                        .map { $0.formatted(date: .abbreviated, time: .omitted) }
-                        .joined(separator: ", ")
-
-                    Text("\(formattedDates)")
-                } else {
-                    Text("0")
+                Text("0")
+            }
+            .onAppear {
+                if editedTitle.isEmpty && editedDescription.isEmpty {
+                    editedTitle = timesheet.title ?? ""
                 }
             }
-        }
-        .onAppear {
-            if editedTitle.isEmpty && editedDescription.isEmpty {
-                editedTitle = timesheet.title
-                editedDescription = timesheet.description ?? ""
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Save") {
-                    Task {
-                        await viewModel.updateTimesheet(
-                            id: timesheet.id,
-                            title: editedTitle,
-                            description: editedDescription,
-                            workDates: editedDate.map { [$0] }
-                        )
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Save") {
+                        Task {
+                            await viewModel.updateTimesheet(
+                                id: timesheet.id,
+                                title: editedTitle,
+                                description: editedDescription,
+                                workDates: editedDate.map { [$0] }
+                            )
+                        }
+                        dismiss()
                     }
-                    dismiss()
                 }
             }
         }
@@ -87,14 +77,16 @@ struct TimesheetDetailView: View {
 }
 
 #Preview {
-    TimesheetDetailView(
-        timesheet: Timesheet(
-            id: UUID(),
-            title: "This is an example title",
-            isComplete: false,
-            userId: UUID(),
-            createdAt: Date()
+    NavigationStack {
+        TimesheetDetailView(
+            timesheet: Timesheet(
+                id: UUID(),
+                title: "This is an example title",
+                userId: UUID(),
+                totalHours: 8,
+                workdays: Workday.mockData()
+            )
         )
-    )
-    .environmentObject(TimesheetViewModel.preview())
+        .environmentObject(TimesheetViewModel.preview())
+    }
 }
