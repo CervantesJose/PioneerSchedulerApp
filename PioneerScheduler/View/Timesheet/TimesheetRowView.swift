@@ -26,11 +26,11 @@ struct TimesheetRowView: View {
             }
 
             HStack {
-                DatePicker("Start", selection: $workday.timeStart, displayedComponents: .hourAndMinute)
-                DatePicker("End", selection: $workday.timeEnd, displayedComponents: .hourAndMinute)
+//                DatePicker("Start", selection: $workday.timeStart, displayedComponents: .hourAndMinute)
+//                DatePicker("End", selection: $workday.timeEnd, displayedComponents: .hourAndMinute)
             }
 
-            Text("Time worked: \(workday.timeWorked)")
+            Text("Time worked: \(workday.timeWorked ?? 0)")
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .cornerRadius(10)

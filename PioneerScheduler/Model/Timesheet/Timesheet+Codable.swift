@@ -14,16 +14,16 @@ extension Timesheet {
         id = try container.decode(UUID.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
         userId = try container.decode(UUID.self, forKey: .userId)
-        totalHours = try container.decode(Double.self, forKey: .totalHours)
-        workdays = try container.decode([Workday].self, forKey: .workdays)
+        totalHours = try container.decodeIfPresent(Double.self, forKey: .totalHours)
+        workdays = try container.decodeIfPresent([Workday].self, forKey: .workdays) ?? []
+    }
 
-        func encode(to encoder: any Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(id, forKey: .id)
-            try container.encode(title, forKey: .title)
-            try container.encode(userId, forKey: .userId)
-            try container.encode(totalHours, forKey: .totalHours)
-            try container.encode(workdays, forKey: .workdays)
-        }
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(title, forKey: .title)
+        try container.encode(userId, forKey: .userId)
+        try container.encodeIfPresent(totalHours, forKey: .totalHours)
+        try container.encode(workdays, forKey: .workdays)
     }
 }

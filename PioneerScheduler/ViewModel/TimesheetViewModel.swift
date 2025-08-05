@@ -5,7 +5,6 @@
 //  Created by Jose Cervantes on 6/24/25.
 //
 
-import Combine
 import Supabase
 import SwiftUI
 
@@ -36,14 +35,15 @@ class TimesheetViewModel: ObservableObject {
 
         if let userID = await getUserID() {
             do {
-                let timesheets: [Timesheet] = try await supabase
+                let response = try await supabase
                     .from("timesheets")
-                    .select()
+                    .select("*, workday(*)")
                     .eq("user_id", value: userID)
                     .execute()
-                    .value
 
+                let timesheets: [Timesheet] = try JSONDecoder().decode([Timesheet].self, from: response.data)
                 self.timesheets = timesheets
+
                 state = .loaded
             } catch {
                 state = .failed(error)
@@ -67,7 +67,7 @@ class TimesheetViewModel: ObservableObject {
 
                 for workday in workdays {
                     try await supabase
-                        .from("workdays")
+                        .from("workday")
                         .insert(workday)
                         .execute()
                 }

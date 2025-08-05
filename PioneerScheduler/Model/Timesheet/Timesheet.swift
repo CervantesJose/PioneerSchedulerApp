@@ -14,7 +14,7 @@ struct Timesheet: Identifiable, Codable, Hashable {
         case title
         case userId = "user_id"
         case totalHours = "total_hours"
-        case workdays
+        case workdays = "workday"
     }
 
     var id: UUID

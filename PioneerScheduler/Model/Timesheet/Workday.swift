@@ -12,10 +12,10 @@ struct Workday: Codable, Identifiable, Hashable {
     let id: UUID
     var date: Date
     var task: [String]?
-    var timeStart: Date
-    var timeEnd: Date
+    var timeStart: Date?
+    var timeEnd: Date?
 
-    var timeWorked: Double
+    var timeWorked: Double?
 //    : TimeInterval {
 //        return timeEnd.timeIntervalSince(timeStart)
 //    }
@@ -26,10 +26,13 @@ struct Workday: Codable, Identifiable, Hashable {
 //        return "\(hours)h \(minutes)m"
 //    }
 
+    var timesheetId: UUID?
+
     enum CodingKeys: String, CodingKey {
         case id, date, task
         case timeStart = "time_start"
         case timeEnd = "time_end"
         case timeWorked = "time_worked"
+        case timesheetId = "timesheet_id"
     }
 }
