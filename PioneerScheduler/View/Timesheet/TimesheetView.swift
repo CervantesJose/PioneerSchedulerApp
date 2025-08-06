@@ -123,17 +123,15 @@ struct TimesheetView: View {
                 Text(timesheet.title ?? "")
                     .font(.headline)
                     .foregroundStyle(.primary)
-                    .lineLimit(1)
-
-                Text("\(timesheet.totalHours ?? 0)")
-                    .font(.body)
+                    .lineLimit(2)
             }
 
             Spacer()
 
             VStack {
-                Text("Hours")
-                Text("0")
+                Text("Total Hours")
+                Text("\(timesheet.totalHours ?? 0)")
+                    .font(.body)
             }
         }
         .padding()
