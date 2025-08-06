@@ -130,7 +130,7 @@ struct TimesheetView: View {
 
             VStack {
                 Text("Total Hours")
-                Text("\(timesheet.totalHours ?? 0)")
+                Text(String(format: "%.2f", timesheet.totalHours ?? 0))
                     .font(.body)
             }
         }
