@@ -15,9 +15,33 @@ extension Workday {
                     task: ["Spring creek", "US 550"],
                     timeStart: Date(timeInterval: -18600, since: .now),
                     timeEnd: .now,
+                    timeWorked: 6
+                   ),
+            Workday(id: UUID(),
+                    date: Date(),
+                    task: ["Crested booty", "Tohellyouride"],
+                    timeStart: Date(timeInterval: -18600, since: .now),
+                    timeEnd: .now,
+                    timeWorked: 10
+                   ),
+            Workday(id: UUID(),
+                    date: Date(),
+                    task: ["Ridgway", "Vibin' (Unpaid)"],
+                    timeStart: Date(timeInterval: -18600, since: .now),
+                    timeEnd: .now,
                     timeWorked: 8
                    )
         ]
+    }
+
+    static func mockWorkDay() -> Workday {
+        Workday(id: UUID(),
+                date: Date(),
+                task: ["Ridgway", "Vibin' (Unpaid)"],
+                timeStart: Date(timeInterval: -18600, since: .now),
+                timeEnd: .now,
+                timeWorked: 8
+               )
     }
 
     init() {

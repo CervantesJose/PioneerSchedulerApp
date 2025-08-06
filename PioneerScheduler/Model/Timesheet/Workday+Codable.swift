@@ -12,7 +12,7 @@ extension Workday {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         date = try container.decode(Date.self, forKey: .date)
-        task = try container.decodeIfPresent([String].self, forKey: .task)
+        task = try container.decodeIfPresent([String].self, forKey: .task) ?? []
         timeStart = try container.decode(Date.self, forKey: .timeStart)
         timeEnd = try container.decode(Date.self, forKey: .timeEnd)
         timeWorked = try container.decodeIfPresent(Double.self, forKey: .timeWorked)

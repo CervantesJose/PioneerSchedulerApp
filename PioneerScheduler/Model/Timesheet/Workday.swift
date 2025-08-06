@@ -11,7 +11,7 @@ struct Workday: Codable, Identifiable, Hashable {
 
     let id: UUID
     var date: Date
-    var task: [String]?
+    var task: [String] = []
     var timeStart: Date
     var timeEnd: Date
 

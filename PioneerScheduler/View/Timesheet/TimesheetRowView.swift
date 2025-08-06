@@ -9,20 +9,21 @@ import SwiftUI
 
 struct TimesheetRowView: View {
     @Binding var workday: Workday
-    @State private var descriptions: [String] = [""]
 
     var body: some View {
 
         VStack(alignment: .leading, spacing: 10) {
             DatePicker("Date", selection: $workday.date, displayedComponents: .date)
 
-            ForEach(descriptions.indices, id: \.self) { index in
-                TextField("Task description", text: $descriptions[index])
-                    .pioneerTextField()
+            Section("Tasks") {
+                ForEach(workday.task.indices, id: \.self) { index in
+                    TextField("Task", text: $workday.task[index])
+                        .pioneerTextField()
+                }
             }
 
             Button("Add task") {
-                descriptions.append("")
+                workday.task.append("")
             }
 
             HStack {
@@ -39,9 +40,10 @@ struct TimesheetRowView: View {
 
 #Preview {
     struct Preview: View {
-        @State private var timesheet = Workday()
+        @State private var workday = Workday.mockWorkDay()
+
         var body: some View {
-            TimesheetRowView(workday: $timesheet)
+            TimesheetRowView(workday: $workday)
         }
     }
 
