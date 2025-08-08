@@ -17,14 +17,32 @@ struct TimesheetRowView: View {
 
             Section("Tasks") {
                 ForEach(workday.task.indices, id: \.self) { index in
-                    TextField("Task", text: $workday.task[index])
-                        .pioneerTextField()
+                    HStack {
+                        TextField("Task", text: $workday.task[index])
+                            .pioneerTextField()
+
+                        Menu {
+                            Button(role: .destructive) {
+                                workday.task.remove(at: index)
+                            } label: {
+                                Label("Delete task", systemImage: "trash")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .font(.headline)
+                                .padding(.trailing, 8)
+                        }
+                    }
                 }
             }
 
             Button("Add task") {
                 workday.task.append("")
             }
+            .frame(maxWidth: .infinity)
+            .padding(8)
+            .background(.ultraThinMaterial)
+            .contentShape(Rectangle())
 
             HStack {
                 DatePicker("Start", selection: $workday.timeStart, displayedComponents: .hourAndMinute)

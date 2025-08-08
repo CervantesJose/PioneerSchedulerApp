@@ -18,7 +18,7 @@ struct TimesheetDetailView: View {
     var body: some View {
         
         Form {
-            Section(header: Text("Title")) {
+            Section("Title") {
                 TextField(editedTitle, text: $editedTitle)
             }
             
