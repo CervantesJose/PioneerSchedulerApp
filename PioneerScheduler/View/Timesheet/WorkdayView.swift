@@ -15,23 +15,21 @@ struct WorkdayView: View {
         VStack(alignment: .leading, spacing: 10) {
             DatePicker("Date", selection: $workday.date, displayedComponents: .date)
 
-            Section("Tasks") {
-                ForEach(workday.task.indices, id: \.self) { index in
-                    HStack {
-                        TextField("Task", text: $workday.task[index])
-                            .pioneerTextField()
+            ForEach(workday.task.indices, id: \.self) { index in
+                HStack {
+                    TextField("Task", text: $workday.task[index])
+                        .pioneerTextField()
 
-                        Menu {
-                            Button(role: .destructive) {
-                                workday.task.remove(at: index)
-                            } label: {
-                                Label("Delete task", systemImage: "trash")
-                            }
+                    Menu {
+                        Button(role: .destructive) {
+                            workday.task.remove(at: index)
                         } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .font(.headline)
-                                .padding(.trailing, 8)
+                            Label("Delete task", systemImage: "trash")
                         }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.headline)
+                            .padding(.trailing, 8)
                     }
                 }
             }
