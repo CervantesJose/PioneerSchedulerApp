@@ -121,7 +121,7 @@ class TimesheetViewModel: ObservableObject {
         workdays.append(Workday())
     }
 
-    func removeEntry(at offsets: IndexSet) {
+    func removeWorkday(at offsets: IndexSet) {
         workdays.remove(atOffsets: offsets)
     }
     

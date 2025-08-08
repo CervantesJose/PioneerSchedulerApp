@@ -24,11 +24,11 @@ struct TimesheetDetailView: View {
             
             Section("Workdays") {
                 List($viewModel.workdays) { $workday in
-                    TimesheetRowView(workday: $workday)
+                    WorkdayView(workday: $workday)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
                                 Task {
-                                    viewModel.removeEntry
+                                    viewModel.removeWorkday
                                 }
                             } label: {
                                 Label("Delete", systemImage: "trash")
