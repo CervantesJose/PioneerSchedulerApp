@@ -22,6 +22,7 @@ struct CreateTimesheetView: View {
                         DatePicker("", selection: $startDate, displayedComponents: .date)
                         DatePicker("", selection: $endDate, displayedComponents: .date)
                     }
+                    .padding(.trailing, 32)
                 }
 
                 TextField("Title", text: $title)

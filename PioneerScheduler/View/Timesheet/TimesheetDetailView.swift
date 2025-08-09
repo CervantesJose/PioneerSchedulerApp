@@ -42,22 +42,22 @@ struct TimesheetDetailView: View {
             Section(header: Text("Total hours")) {
                 Text(viewModel.totalDuration.asHourMinuteString)
             }
-            .onAppear {
-                if editedTitle.isEmpty {
-                    editedTitle = timesheet.title ?? ""
-                }
+        }
+        .onAppear {
+            if editedTitle.isEmpty {
+                editedTitle = timesheet.title ?? ""
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Save") {
-                        Task {
-                            await viewModel.updateTimesheet(
-                                id: timesheet.id,
-                                title: editedTitle
-                            )
-                        }
-                        dismiss()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Save") {
+                    Task {
+                        await viewModel.updateTimesheet(
+                            id: timesheet.id,
+                            title: editedTitle
+                        )
                     }
+                    dismiss()
                 }
             }
         }

@@ -14,21 +14,18 @@ extension Timesheet {
                 id: UUID(),
                 title: "Mock timesheet",
                 userId: UUID(),
-                totalHours: 8,
                 workdays: Workday.mockData(),
             ),
             Timesheet(
                 id: UUID(),
                 title: "Mock timesheet 2",
                 userId: UUID(),
-                totalHours: 16,
                 workdays: []
             ),
             Timesheet(
                 id: UUID(),
                 title: "Mock timesheet 3",
                 userId: UUID(),
-                totalHours: 48,
                 workdays: []
             )
         ]
