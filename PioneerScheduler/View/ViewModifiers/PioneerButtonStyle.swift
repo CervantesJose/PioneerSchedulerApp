@@ -20,7 +20,7 @@ struct PioneerButtonStyle: ViewModifier {
             .frame(maxWidth: .infinity, minHeight: 44)
             .background(.blue)
             .cornerRadius(Constants.buttonPadding)
-            .padding([.horizontal, .top])
+            .padding(.horizontal)
     }
 }
 

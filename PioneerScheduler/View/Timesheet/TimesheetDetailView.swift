@@ -9,8 +9,9 @@ import SwiftUI
 
 struct TimesheetDetailView: View {
     @Environment(\.dismiss) var dismiss
-    let timesheet: Timesheet
     @EnvironmentObject var viewModel: TimesheetViewModel
+
+    let timesheet: Timesheet
 
     @State private var editedTitle = ""
     @State private var editedDate: Date? = nil
@@ -23,33 +24,23 @@ struct TimesheetDetailView: View {
             }
             
             Section("Workdays") {
-                List($viewModel.workdays) { $workday in
+                ForEach($viewModel.workdays) { $workday in
                     WorkdayView(workday: $workday)
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                Task {
-                                    viewModel.removeWorkday
-                                }
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
                 }
-                
+                .onDelete { indexSet in
+                    viewModel.workdays.remove(atOffsets: indexSet)
+                }
+
                 Button(action: {
                     viewModel.addWorkday()
                 }) {
                     Label("Add workday", systemImage: "plus")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .cornerRadius(8)
+                        .pioneerButtonStyle()
                 }
             }
             
             Section(header: Text("Total hours")) {
-                Text("0")
+                Text(viewModel.totalDuration.asHourMinuteString)
             }
             .onAppear {
                 if editedTitle.isEmpty {
@@ -80,7 +71,6 @@ struct TimesheetDetailView: View {
                 id: UUID(),
                 title: "This is an example title",
                 userId: UUID(),
-                totalHours: 8,
                 workdays: Workday.mockData()
             )
         )

@@ -1,5 +1,5 @@
 //
-//  TimesheetEntry.swift
+//  Workday.swift
 //  PioneerScheduler
 //
 //  Created by Jose Cervantes on 7/15/25.
@@ -11,20 +11,13 @@ struct Workday: Codable, Identifiable, Hashable {
 
     let id: UUID
     var date: Date
-    var task: [String] = []
+    var tasks: [String]
     var timeStart: Date
     var timeEnd: Date
 
-    var timeWorked: Double?
-//    : TimeInterval {
-//        return timeEnd.timeIntervalSince(timeStart)
-//    }
-//
-//    var totalTimeFormatted: String {
-//        let hours = Int(timeWorked) / 3600
-//        let minutes = (Int(timeWorked) % 3600) / 60
-//        return "\(hours)h \(minutes)m"
-//    }
+    var duration: TimeInterval {
+        max(0, timeEnd.timeIntervalSince(timeStart))
+    }
 
     var timesheetId: UUID?
 

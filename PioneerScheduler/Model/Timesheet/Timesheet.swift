@@ -23,3 +23,13 @@ struct Timesheet: Identifiable, Codable, Hashable {
     var totalHours: Double?
     var workdays: [Workday]?
 }
+
+extension TimeInterval {
+    // "H:MM" (e.g., 7:30)
+    var asHourMinuteString: String {
+        let totalMinutes = Int((self / 60).rounded())
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        return String(format: "%dh:%02dm", hours, minutes)
+    }
+}

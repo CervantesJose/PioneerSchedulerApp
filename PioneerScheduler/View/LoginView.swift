@@ -44,8 +44,8 @@ struct LoginView: View {
                     } label: {
                         Text("Login")
                             .pioneerButtonStyle()
+                            .padding(.top)
                     }
-                    //                    .disabled(viewModel.isLoading || !viewModel.isValid)
                     .alert(viewModel.alertTitle, isPresented: $viewModel.isShowingAlert, actions: {
                         Button("OK", role: .cancel) { }
                     }, message: {
@@ -104,4 +104,8 @@ struct BackgroundView: View {
                             ]))
             .ignoresSafeArea()
     }
+}
+
+#Preview {
+    LoginView(viewModel: AuthViewModel.preview())
 }

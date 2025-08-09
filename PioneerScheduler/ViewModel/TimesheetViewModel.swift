@@ -28,6 +28,14 @@ class TimesheetViewModel: ObservableObject {
 
     @Published var workdays: [Workday] = []
 
+    var totalDuration: TimeInterval {
+        workdays.reduce(0) { $0 + $1.duration }
+    }
+
+    var totalHours: Double {
+        totalDuration / 3600
+    }
+
     init() { }
 
     func fetchTimesheets() async {

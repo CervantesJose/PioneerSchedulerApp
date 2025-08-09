@@ -12,24 +12,21 @@ extension Workday {
         [
             Workday(id: UUID(),
                     date: Date(),
-                    task: ["Spring creek", "US 550"],
+                    tasks: ["Spring creek", "US 550"],
                     timeStart: Date(timeInterval: -18600, since: .now),
-                    timeEnd: .now,
-                    timeWorked: 6
+                    timeEnd: .now
                    ),
             Workday(id: UUID(),
                     date: Date(),
-                    task: ["Crested booty", "Tohellyouride"],
+                    tasks: ["Crested booty", "Tohellyouride"],
                     timeStart: Date(timeInterval: -18600, since: .now),
-                    timeEnd: .now,
-                    timeWorked: 10
+                    timeEnd: .now
                    ),
             Workday(id: UUID(),
                     date: Date(),
-                    task: ["Ridgway", "Vibin' (Unpaid)"],
+                    tasks: ["Ridgway", "Vibin' (Unpaid)"],
                     timeStart: Date(timeInterval: -18600, since: .now),
-                    timeEnd: .now,
-                    timeWorked: 8
+                    timeEnd: .now
                    )
         ]
     }
@@ -37,19 +34,17 @@ extension Workday {
     static func mockWorkDay() -> Workday {
         Workday(id: UUID(),
                 date: Date(),
-                task: ["Ridgway", "Vibin' (Unpaid)"],
+                tasks: ["Ridgway", "Vibin' (Unpaid)"],
                 timeStart: Date(timeInterval: -18600, since: .now),
                 timeEnd: .now,
-                timeWorked: 8
                )
     }
 
     init() {
         self.id = UUID()
         self.date = Date()
-        self.task = []
+        self.tasks = []
         self.timeStart = Date()
         self.timeEnd = Date()
-        self.timeWorked = 0
     }
 }
