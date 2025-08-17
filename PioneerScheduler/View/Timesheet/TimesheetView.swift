@@ -120,7 +120,7 @@ struct TimesheetView: View {
     private func timesheetRow(timesheet: Timesheet) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(timesheet.title ?? "")
+                Text("Timesheet week range will go here")
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .lineLimit(2)

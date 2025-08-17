@@ -9,23 +9,24 @@ import Foundation
 
 struct Workday: Codable, Identifiable, Hashable {
 
-    let id: UUID
-    var date: Date
-    var tasks: [String]
-    var timeStart: Date
-    var timeEnd: Date
+    enum CodingKeys: String, CodingKey {
+        case id, date, tasks
+        case timeStart = "time_start"
+        case timeEnd = "time_end"
+        case timesheetId = "timesheet_id"
+    }
+
+    var id: UUID = UUID()
+    var timesheetId: UUID? = nil
+    var date: Date = .now
+    var tasks: [String] = []
+    var timeStart: Date = .now
+    var timeEnd: Date = .now
 
     var duration: TimeInterval {
         max(0, timeEnd.timeIntervalSince(timeStart))
     }
 
-    var timesheetId: UUID?
-
-    enum CodingKeys: String, CodingKey {
-        case id, date, task
-        case timeStart = "time_start"
-        case timeEnd = "time_end"
-        case timeWorked = "time_worked"
-        case timesheetId = "timesheet_id"
-    }
+    init() { }
+    
 }

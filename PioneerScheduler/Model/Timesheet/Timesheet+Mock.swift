@@ -12,20 +12,23 @@ extension Timesheet {
         [
             Timesheet(
                 id: UUID(),
-                title: "Mock timesheet",
                 userId: UUID(),
+                startDate: .now,
+                endDate: .now,
                 workdays: Workday.mockData(),
             ),
             Timesheet(
                 id: UUID(),
-                title: "Mock timesheet 2",
                 userId: UUID(),
+                startDate: .now,
+                endDate: .now,
                 workdays: []
             ),
             Timesheet(
                 id: UUID(),
-                title: "Mock timesheet 3",
                 userId: UUID(),
+                startDate: .now,
+                endDate: .now,
                 workdays: []
             )
         ]
@@ -35,13 +38,14 @@ extension Timesheet {
         id: UUID,
         title: String,
         userId: UUID,
-        totalHours: Double,
+        startDate: Date,
+        endDate: Date,
         workdays: [Workday]
     ) {
         self.id = id
-        self.title = title
         self.userId = userId
-        self.totalHours = totalHours
+        self.startDate = startDate
+        self.endDate = endDate
         self.workdays = workdays
     }
 }

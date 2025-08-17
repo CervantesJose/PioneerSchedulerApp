@@ -13,15 +13,11 @@ struct TimesheetDetailView: View {
 
     let timesheet: Timesheet
 
-    @State private var editedTitle = ""
     @State private var editedDate: Date? = nil
 
     var body: some View {
         
         Form {
-            Section("Title") {
-                TextField(editedTitle, text: $editedTitle)
-            }
             
             Section("Workdays") {
                 ForEach($viewModel.workdays) { $workday in
@@ -43,18 +39,12 @@ struct TimesheetDetailView: View {
                 Text(viewModel.totalDuration.asHourMinuteString)
             }
         }
-        .onAppear {
-            if editedTitle.isEmpty {
-                editedTitle = timesheet.title ?? ""
-            }
-        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
                     Task {
                         await viewModel.updateTimesheet(
-                            id: timesheet.id,
-                            title: editedTitle
+                            id: timesheet.id
                         )
                     }
                     dismiss()
@@ -69,8 +59,10 @@ struct TimesheetDetailView: View {
         TimesheetDetailView(
             timesheet: Timesheet(
                 id: UUID(),
-                title: "This is an example title",
                 userId: UUID(),
+                startDate: .now,
+                endDate: .now,
+                totalHours: 0.0,
                 workdays: Workday.mockData()
             )
         )

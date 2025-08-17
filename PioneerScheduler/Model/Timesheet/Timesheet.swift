@@ -11,17 +11,28 @@ struct Timesheet: Identifiable, Codable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id
-        case title
         case userId = "user_id"
+        case startDate = "start_date"
+        case endDate = "end_date"
         case totalHours = "total_hours"
         case workdays = "workday"
     }
 
     var id: UUID
-    var title: String?
     var userId: UUID
+    var startDate: Date
+    var endDate: Date
     var totalHours: Double?
-    var workdays: [Workday]?
+    var workdays: [Workday] = []
+
+    init(id: UUID, userId: UUID, startDate: Date, endDate: Date, totalHours: Double? = nil, workdays: [Workday] = []) {
+        self.id = id
+        self.userId = userId
+        self.startDate = startDate
+        self.endDate = endDate
+        self.totalHours = totalHours
+        self.workdays = workdays
+    }
 }
 
 extension TimeInterval {
