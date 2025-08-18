@@ -9,7 +9,7 @@ import Foundation
 
 extension JSONDecoder {
     static var supabase: JSONDecoder {
-        var decoder = JSONDecoder()
+        let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom { d in
             let string = try d.singleValueContainer().decode(String.self)
 
