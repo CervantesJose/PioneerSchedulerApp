@@ -18,7 +18,7 @@ class TimesheetViewModel: ObservableObject {
         case failed(Error)
     }
 
-    @Published var timesheets: [Timesheet] = []
+    @Published var timesheets: [TimesheetWithWorkdays] = []
 
     @Published var newTimesheetDate: Date = .now
 
@@ -47,9 +47,12 @@ class TimesheetViewModel: ObservableObject {
                 .order("start_date", ascending: false)
                 .execute()
 
-            let timesheets: [Timesheet] = try decoder.decode([Timesheet].self, from: response.data)
-            self.timesheets = timesheets
+            let timesheets: [TimesheetWithWorkdays] = try decoder.decode(
+                [TimesheetWithWorkdays].self,
+                from: response.data
+            )
 
+            self.timesheets = timesheets
             state = .loaded
         } catch {
             state = .failed(error)
@@ -59,28 +62,27 @@ class TimesheetViewModel: ObservableObject {
     func addTimesheet() async {
         guard let userID = await getUserID() else { return }
 
-        var newTimesheet = Timesheet(
+        let newTimesheet = TimesheetRow(
             id: UUID(),
             userId: userID,
             startDate: .now,
             endDate: .now,
-            totalHours: workdays.isEmpty ? nil : totalHours,
-            workdays: []
+            totalHours: workdays.isEmpty ? nil : (workdays.reduce(0) { $0 + $1.duration } / 3600)
         )
 
         do {
-            let insertedTimesheet = try await supabase
+            let response = try await supabase
                 .from("timesheets")
                 .insert(newTimesheet)
-                .select()
+                .select("*")
                 .single()
                 .execute()
 
-            newTimesheet = try decoder.decode(Timesheet.self, from: insertedTimesheet.data)
+            let inserted = try decoder.decode(TimesheetRow.self, from: response.data)
 
             let children = workdays.map { workday -> Workday in
                 var copy = workday
-                copy.timesheetId = newTimesheet.id
+                copy.timesheetId = inserted.id
                 if copy.tasks.isEmpty { copy.tasks = [] }
                 return copy
             }
@@ -92,8 +94,15 @@ class TimesheetViewModel: ObservableObject {
                     .execute()
             }
 
-            newTimesheet.workdays = children
-            timesheets.insert(newTimesheet, at: 0)
+            let hydratedResponse = try await supabase
+                .from("timesheets")
+                .select("*, workday(*)")
+                .eq("id", value: inserted.id)
+                .single()
+                .execute()
+
+            let hydrated = try decoder.decode(TimesheetWithWorkdays.self, from: hydratedResponse.data)
+            timesheets.insert(hydrated, at: 0)
 
             workdays.removeAll()
             toggleIsCreatingNewItemSheetPresented()
@@ -120,6 +129,18 @@ class TimesheetViewModel: ObservableObject {
 //        } catch {
 //            print(error.localizedDescription)
 //        }
+    }
+
+    func updateTimesheetTotals(id: UUID, totalHours: Double?) async {
+        do {
+            _ = try await supabase
+                .from("timesheets")
+                .update(["total_hours": totalHours])
+                .eq("id", value: id)
+                .execute()
+        } catch {
+            print("Update error: \(error.localizedDescription)")
+        }
     }
 
     func deleteTimesheet(id: UUID) async {
@@ -164,7 +185,7 @@ extension TimesheetViewModel {
 
     static func preview() -> TimesheetViewModel {
         let vm = TimesheetViewModel()
-        vm.timesheets = Timesheet.mockData()
+        vm.timesheets = TimesheetWithWorkdays.mockData()
         vm.state = .loaded
         return vm
     }

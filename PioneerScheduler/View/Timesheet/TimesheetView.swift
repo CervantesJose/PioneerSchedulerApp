@@ -112,12 +112,12 @@ struct TimesheetView: View {
                 }
             }
         }
-        .navigationDestination(for: Timesheet.self) { timesheet in
+        .navigationDestination(for: TimesheetWithWorkdays.self) { timesheet in
             TimesheetDetailView(timesheet: timesheet)
         }
     }
 
-    private func timesheetRow(timesheet: Timesheet) -> some View {
+    private func timesheetRow(timesheet: TimesheetWithWorkdays) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Timesheet week range will go here")

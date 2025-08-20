@@ -11,7 +11,7 @@ struct TimesheetDetailView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: TimesheetViewModel
 
-    let timesheet: Timesheet
+    let timesheet: TimesheetWithWorkdays
 
     @State private var editedDate: Date? = nil
 
@@ -57,13 +57,13 @@ struct TimesheetDetailView: View {
 #Preview {
     NavigationStack {
         TimesheetDetailView(
-            timesheet: Timesheet(
+            timesheet: TimesheetWithWorkdays(
                 id: UUID(),
                 userId: UUID(),
                 startDate: .now,
                 endDate: .now,
                 totalHours: 0.0,
-                workdays: Workday.mockData()
+                workday: Workday.mockData()
             )
         )
         .environmentObject(TimesheetViewModel.preview())

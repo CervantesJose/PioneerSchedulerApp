@@ -7,29 +7,29 @@
 
 import Foundation
 
-extension Timesheet {
-    static func mockData() -> [Timesheet] {
+extension TimesheetWithWorkdays {
+    static func mockData() -> [TimesheetWithWorkdays] {
         [
-            Timesheet(
+            TimesheetWithWorkdays(
                 id: UUID(),
                 userId: UUID(),
                 startDate: .now,
                 endDate: .now,
-                workdays: Workday.mockData(),
+                workday: Workday.mockData(),
             ),
-            Timesheet(
+            TimesheetWithWorkdays(
                 id: UUID(),
                 userId: UUID(),
                 startDate: .now,
                 endDate: .now,
-                workdays: []
+                workday: []
             ),
-            Timesheet(
+            TimesheetWithWorkdays(
                 id: UUID(),
                 userId: UUID(),
                 startDate: .now,
                 endDate: .now,
-                workdays: []
+                workday: []
             )
         ]
     }
@@ -40,12 +40,12 @@ extension Timesheet {
         userId: UUID,
         startDate: Date,
         endDate: Date,
-        workdays: [Workday]
+        workday: [Workday]
     ) {
         self.id = id
         self.userId = userId
         self.startDate = startDate
         self.endDate = endDate
-        self.workdays = workdays
+        self.workday = workday
     }
 }
