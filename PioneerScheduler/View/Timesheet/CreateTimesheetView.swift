@@ -11,7 +11,6 @@ struct CreateTimesheetView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
     @State private var startDate: Date = .now
     @State private var endDate: Date = Date(timeIntervalSinceNow: 186000)
-    @State private var title = ""
 
     var body: some View {
         NavigationStack {
@@ -25,15 +24,12 @@ struct CreateTimesheetView: View {
                     .padding(.trailing, 32)
                 }
 
-                TextField("Title", text: $title)
-                    .pioneerTextField()
-
-                Spacer()
-
                 Button {
                     Task {
                         await viewModel
                             .addTimesheet(
+                                startDate: startDate,
+                                endDate: endDate
                             )
                     }
                 } label: {
@@ -44,6 +40,8 @@ struct CreateTimesheetView: View {
                 .buttonStyle(.borderedProminent)
                 .clipShape(.capsule)
                 .frame(maxWidth: .infinity)
+
+                Spacer()
             }
         }
         .padding()

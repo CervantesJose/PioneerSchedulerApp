@@ -59,14 +59,14 @@ class TimesheetViewModel: ObservableObject {
         }
     }
 
-    func addTimesheet() async {
+    func addTimesheet(startDate: Date, endDate: Date) async {
         guard let userID = await getUserID() else { return }
 
         let newTimesheet = TimesheetRow(
             id: UUID(),
             userId: userID,
-            startDate: .now,
-            endDate: .now,
+            startDate: startDate,
+            endDate: endDate,
             totalHours: workdays.isEmpty ? nil : (workdays.reduce(0) { $0 + $1.duration } / 3600)
         )
 
