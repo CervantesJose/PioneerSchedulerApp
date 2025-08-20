@@ -120,7 +120,9 @@ struct TimesheetView: View {
     private func timesheetRow(timesheet: TimesheetWithWorkdays) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Timesheet week range will go here")
+                Text(
+                    "\(timesheet.startDate.formatted(date: .abbreviated, time: .omitted)) - \(timesheet.endDate.formatted(date: .abbreviated, time: .omitted))"
+                )
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .lineLimit(2)
