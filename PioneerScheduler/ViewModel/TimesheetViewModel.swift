@@ -19,13 +19,10 @@ class TimesheetViewModel: ObservableObject {
     }
 
     @Published var timesheets: [TimesheetWithWorkdays] = []
-
-    @Published var newTimesheetDate: Date = .now
+    @Published var workdays: [Workday] = []
 
     @Published var isCreatingNewItemSheetPresented = false
     @Published var state: LoadingState = .idle
-
-    @Published var workdays: [Workday] = []
 
     var totalDuration: TimeInterval { workdays.reduce(0) { $0 + $1.duration } }
     var totalHours: Double { totalDuration / 3600 }
