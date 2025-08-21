@@ -17,7 +17,6 @@ final class DetailViewModel: ObservableObject {
     var totalHours: Double { totalDuration / 3600 }
 
     private let decoder = JSONDecoder.supabase
-    private let encoder = JSONEncoder.supabase
 
     init(timesheet: TimesheetWithWorkdays) {
         let id = timesheet.id

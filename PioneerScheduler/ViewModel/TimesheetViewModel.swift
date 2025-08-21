@@ -24,7 +24,6 @@ class TimesheetViewModel: ObservableObject {
     @Published var state: LoadingState = .idle
 
     private let decoder = JSONDecoder.supabase
-    private let encoder = JSONEncoder.supabase
 
     init() { }
 
