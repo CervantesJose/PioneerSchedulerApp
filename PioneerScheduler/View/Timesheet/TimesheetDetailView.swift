@@ -18,7 +18,10 @@ struct TimesheetDetailView: View {
     var body: some View {
         
         Form {
-            
+            Section("Week") {
+                Text("\(timesheet.startDate.formatted(date: .long, time: .omitted)) - \(timesheet.endDate.formatted(date: .long, time: .omitted))")
+            }
+
             Section("Workdays") {
                 ForEach($viewModel.workdays) { $workday in
                     WorkdayView(workday: $workday)
@@ -31,7 +34,6 @@ struct TimesheetDetailView: View {
                     viewModel.addWorkday()
                 }) {
                     Label("Add workday", systemImage: "plus")
-                        .pioneerButtonStyle()
                 }
             }
             
@@ -62,7 +64,6 @@ struct TimesheetDetailView: View {
                 userId: UUID(),
                 startDate: .now,
                 endDate: .now,
-                totalHours: 0.0,
                 workday: Workday.mockData()
             )
         )
