@@ -15,7 +15,7 @@ extension Workday {
         tasks = try container.decodeIfPresent([String].self, forKey: .tasks) ?? []
         timeStart = try container.decode(Date.self, forKey: .timeStart)
         timeEnd = try container.decode(Date.self, forKey: .timeEnd)
-        timesheetId = try container.decodeIfPresent(UUID.self, forKey: .timesheetId)
+        timesheetId = try container.decode(UUID.self, forKey: .timesheetId)
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -25,6 +25,6 @@ extension Workday {
         try container.encode(tasks, forKey: .tasks)
         try container.encode(timeStart, forKey: .timeStart)
         try container.encode(timeEnd, forKey: .timeEnd)
-        try container.encodeIfPresent(timesheetId, forKey: .timesheetId)
+        try container.encode(timesheetId, forKey: .timesheetId)
     }
 }

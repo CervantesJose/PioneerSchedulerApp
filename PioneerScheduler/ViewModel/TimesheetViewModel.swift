@@ -76,21 +76,6 @@ class TimesheetViewModel: ObservableObject {
                 .execute()
 
             let inserted = try decoder.decode(TimesheetRow.self, from: response.data)
-
-            let children = workdays.map { workday -> Workday in
-                var copy = workday
-                copy.timesheetId = inserted.id
-                if copy.tasks.isEmpty { copy.tasks = [] }
-                return copy
-            }
-
-            if children.isEmpty == false {
-                let _ = try await supabase
-                    .from("workday")
-                    .insert(children)
-                    .execute()
-            }
-
             let hydratedResponse = try await supabase
                 .from("timesheets")
                 .select("*, workday(*)")
@@ -100,32 +85,10 @@ class TimesheetViewModel: ObservableObject {
 
             let hydrated = try decoder.decode(TimesheetWithWorkdays.self, from: hydratedResponse.data)
             timesheets.insert(hydrated, at: 0)
-
-            workdays.removeAll()
             toggleIsCreatingNewItemSheetPresented()
         } catch {
             print("Error adding timesheet: \(error)")
         }
-
-        workdays.removeAll()
-    }
-
-    func updateTimesheet(id: UUID) async {
-//        do {
-//            try await supabase
-//                .from("timesheets")
-//                .update([
-//                    "title": title
-//                    ])
-//                .eq("id", value: id)
-//                .execute()
-
-//            if let index = timesheets.firstIndex(where: { $0.id == id }) {
-//                timesheets[index].title = title
-//            }
-//        } catch {
-//            print(error.localizedDescription)
-//        }
     }
 
     func updateTimesheetTotals(id: UUID, totalHours: Double?) async {
@@ -156,14 +119,6 @@ class TimesheetViewModel: ObservableObject {
         }
     }
 
-    func addWorkday() {
-        workdays.append(Workday())
-    }
-
-    func removeWorkday(at offsets: IndexSet) {
-        workdays.remove(atOffsets: offsets)
-    }
-    
     func getUserID() async -> UUID? {
         do {
             return try await supabase.auth.user().id
@@ -185,5 +140,13 @@ extension TimesheetViewModel {
         vm.timesheets = TimesheetWithWorkdays.mockData()
         vm.state = .loaded
         return vm
+    }
+
+    func apply(hydrated: TimesheetWithWorkdays) {
+        if let index = timesheets.firstIndex(where: { $0.id == hydrated.id }) {
+            timesheets[index] = hydrated
+        } else {
+            timesheets.insert(hydrated, at: 0)
+        }
     }
 }

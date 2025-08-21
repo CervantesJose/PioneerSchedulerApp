@@ -9,11 +9,16 @@ import SwiftUI
 
 struct TimesheetDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel: TimesheetViewModel
+    @StateObject private var viewModel: DetailViewModel
+    let onSave: (TimesheetWithWorkdays) -> Void
 
-    let timesheet: TimesheetWithWorkdays
+    private let timesheet: TimesheetWithWorkdays
 
-    @State private var editedDate: Date? = nil
+    init(timesheet: TimesheetWithWorkdays, onSave: @escaping (TimesheetWithWorkdays) -> Void) {
+        self.timesheet = timesheet
+        _viewModel = StateObject(wrappedValue: DetailViewModel(timesheet: timesheet))
+        self.onSave = onSave
+    }
 
     var body: some View {
         
@@ -45,11 +50,14 @@ struct TimesheetDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
                     Task {
-                        await viewModel.updateTimesheet(
-                            id: timesheet.id
-                        )
+                        do {
+                            let hydrated = try await viewModel.save()
+                            onSave(hydrated)
+                            dismiss()
+                        } catch {
+                            print("Save failed: \(error.localizedDescription)")
+                        }
                     }
-                    dismiss()
                 }
             }
         }
@@ -65,7 +73,8 @@ struct TimesheetDetailView: View {
                 startDate: .now,
                 endDate: .now,
                 workday: Workday.mockData()
-            )
+            ),
+            onSave: { _ in }
         )
         .environmentObject(TimesheetViewModel.preview())
     }

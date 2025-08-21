@@ -16,19 +16,31 @@ struct Workday: Codable, Identifiable, Hashable {
         case timesheetId = "timesheet_id"
     }
 
-    var id: UUID = UUID()
-    var timesheetId: UUID? = nil
-    var date: Date = .now
-    var tasks: [String] = []
-    var timeStart: Date = .now
-    var timeEnd: Date = .now
+    var id: UUID
+    var timesheetId: UUID
+    var date: Date
+    var tasks: [String]
+    var timeStart: Date
+    var timeEnd: Date
 
-    var duration: TimeInterval {
-        max(0, timeEnd.timeIntervalSince(timeStart))
+    var duration: TimeInterval { max(0, timeEnd.timeIntervalSince(timeStart)) }
+
+    init(
+        id: UUID = UUID(),
+        timesheetId: UUID,
+        date: Date = .now,
+        tasks: [String] = [],
+        timeStart: Date = .now,
+        timeEnd: Date = .now
+    ) {
+        self.id = id
+        self.timesheetId = timesheetId
+        self.date = date
+        self.tasks = tasks
+        self.timeStart = timeStart
+        self.timeEnd = timeEnd
     }
 
-    init() { }
-    
 }
 
 extension TimeInterval {

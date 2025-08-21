@@ -113,7 +113,9 @@ struct TimesheetView: View {
             }
         }
         .navigationDestination(for: TimesheetWithWorkdays.self) { timesheet in
-            TimesheetDetailView(timesheet: timesheet)
+            TimesheetDetailView(timesheet: timesheet) { hydrated in
+                viewModel.apply(hydrated: hydrated)
+            }
         }
     }
 
