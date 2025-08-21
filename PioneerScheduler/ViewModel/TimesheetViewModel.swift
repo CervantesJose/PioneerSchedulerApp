@@ -19,13 +19,9 @@ class TimesheetViewModel: ObservableObject {
     }
 
     @Published var timesheets: [TimesheetWithWorkdays] = []
-    @Published var workdays: [Workday] = []
 
     @Published var isCreatingNewItemSheetPresented = false
     @Published var state: LoadingState = .idle
-
-    var totalDuration: TimeInterval { workdays.reduce(0) { $0 + $1.duration } }
-    var totalHours: Double { totalDuration / 3600 }
 
     private let decoder = JSONDecoder.supabase
     private let encoder = JSONEncoder.supabase
@@ -63,8 +59,7 @@ class TimesheetViewModel: ObservableObject {
             id: UUID(),
             userId: userID,
             startDate: startDate,
-            endDate: endDate,
-            totalHours: workdays.isEmpty ? nil : (workdays.reduce(0) { $0 + $1.duration } / 3600)
+            endDate: endDate
         )
 
         do {
@@ -148,5 +143,10 @@ extension TimesheetViewModel {
         } else {
             timesheets.insert(hydrated, at: 0)
         }
+    }
+
+    func displayDuration(for timesheet: TimesheetWithWorkdays) -> TimeInterval {
+        if let hours = timesheet.totalHours { return hours * 3600 }
+        return (timesheet.workday).reduce(0) { $0 + $1.duration }
     }
 }

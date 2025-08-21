@@ -134,7 +134,7 @@ struct TimesheetView: View {
 
             VStack {
                 Text("Total")
-                Text(viewModel.totalDuration.asHourMinuteString)
+                Text(viewModel.displayDuration(for: timesheet).asHourMinuteString)
                     .font(.body)
             }
         }
