@@ -20,13 +20,13 @@ struct TimesheetDetailView: View {
         self.onSave = onSave
     }
 
+    private var title: String {
+        "\(timesheet.startDate.formatted(date: .numeric, time: .omitted)) - \(timesheet.endDate.formatted(date: .numeric, time: .omitted))"
+    }
+
     var body: some View {
         
         Form {
-            Section("Week") {
-                Text("\(timesheet.startDate.formatted(date: .long, time: .omitted)) - \(timesheet.endDate.formatted(date: .long, time: .omitted))")
-            }
-
             Section("Workdays") {
                 ForEach($viewModel.workdays) { $workday in
                     WorkdayView(workday: $workday)
@@ -46,6 +46,8 @@ struct TimesheetDetailView: View {
                 Text(viewModel.totalDuration.asHourMinuteString)
             }
         }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
