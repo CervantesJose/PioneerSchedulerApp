@@ -12,7 +12,7 @@ struct TimesheetDetailView: View {
     @StateObject private var viewModel: DetailViewModel
     let onSave: (TimesheetWithWorkdays) -> Void
 
-    private let timesheet: TimesheetWithWorkdays
+    let timesheet: TimesheetWithWorkdays
 
     init(timesheet: TimesheetWithWorkdays, onSave: @escaping (TimesheetWithWorkdays) -> Void) {
         self.timesheet = timesheet
