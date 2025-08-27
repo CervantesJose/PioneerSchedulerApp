@@ -34,10 +34,12 @@ struct TimesheetDetailView: View {
                 }
                 .onDelete { indexSet in
                     viewModel.workdays.remove(atOffsets: indexSet)
+                    exportURL = nil
                 }
 
                 Button(action: {
                     viewModel.addWorkday()
+                    exportURL = nil
                 }) {
                     Label("Add workday", systemImage: "plus")
                 }
@@ -46,15 +48,16 @@ struct TimesheetDetailView: View {
             Section(header: Text("Total time: \(viewModel.totalDuration.asHourMinuteString)")) {
                 VStack {
                     if let url = exportURL {
-                        ShareLink("Export PDF", item: url)
+                        ShareLink("Share PDF", item: url)
                     } else {
                         Button {
                             exportURL = renderPDF(timesheet: timesheet, workdays: viewModel.workdays)
                         } label: {
-                            Label("Export PDF", systemImage: "square.and.arrow.up")
+                            Label("Render PDF", systemImage: "square.and.arrow.up")
                         }
                     }
                 }
+                .disabled(viewModel.workdays.isEmpty)
             }
         }
         .navigationTitle(title)
@@ -114,7 +117,9 @@ struct TimesheetPDFView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("\(timesheet.startDate.formatted(date: .numeric, time: .omitted)) - \(timesheet.startDate.formatted(date: .numeric, time: .omitted))")
+            Text(
+                "\(timesheet.startDate.formatted(date: .numeric, time: .omitted)) - \(timesheet.endDate.formatted(date: .numeric, time: .omitted))"
+            )
                 .font(.title)
                 .bold()
 
