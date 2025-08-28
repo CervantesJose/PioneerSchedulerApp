@@ -87,7 +87,7 @@ struct TimesheetDetailView: View {
 
         // 2: Save it to our documents directory
         let url = URL.documentsDirectory.appending(
-            path: "timesheet-\(timesheet.startDate.formatted(date: .numeric, time: .omitted))/\(timesheet.endDate.formatted(date: .numeric, time: .omitted)).pdf"
+            path: "timesheet: \(timesheet.startDate.formatted(date: .numeric, time: .omitted))-\(timesheet.endDate.formatted(date: .numeric, time: .omitted)).pdf"
         )
 
         // 3: Start the rendering process
