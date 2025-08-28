@@ -30,8 +30,8 @@ struct Workday: Codable, Identifiable, Hashable {
         timesheetId: UUID,
         date: Date = .now,
         tasks: [String] = [],
-        timeStart: Date = .now,
-        timeEnd: Date = .now
+        timeStart: Date = (Calendar.current.date(bySettingHour: 7, minute: 0, second: 0, of: .now) ?? .now),
+        timeEnd: Date = (Calendar.current.date(bySettingHour: 15, minute: 0, second: 0, of: .now) ?? .now)
     ) {
         self.id = id
         self.timesheetId = timesheetId
@@ -40,7 +40,6 @@ struct Workday: Codable, Identifiable, Hashable {
         self.timeStart = timeStart
         self.timeEnd = timeEnd
     }
-
 }
 
 extension TimeInterval {
