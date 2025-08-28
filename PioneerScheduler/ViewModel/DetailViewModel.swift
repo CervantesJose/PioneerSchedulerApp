@@ -14,7 +14,6 @@ final class DetailViewModel: ObservableObject {
     private let originalIds: Set<UUID> // tracks originals to detect deletions
 
     var totalDuration: TimeInterval { workdays.reduce(0) { $0 + $1.duration } }
-    var totalHours: Double { totalDuration / 3600 }
 
     private let decoder = JSONDecoder.supabase
 
@@ -42,7 +41,7 @@ final class DetailViewModel: ObservableObject {
     func save() async throws -> TimesheetWithWorkdays {
         for index in workdays.indices { workdays[index].timesheetId = timesheetId }
 
-        _ = try await supabase
+        try await supabase
             .from("workday")
             .upsert(workdays)
             .execute()
@@ -51,18 +50,12 @@ final class DetailViewModel: ObservableObject {
         let deletedIds = Array(originalIds.subtracting(currentIds))
 
         if deletedIds.isEmpty == false {
-            _ = try await supabase
+            try await supabase
                 .from("workday")
                 .delete()
                 .in("id", values: deletedIds)
                 .execute()
         }
-
-        _ = try await supabase
-            .from("timesheets")
-            .update(["total_hours": totalHours])
-            .eq("id", value: timesheetId)
-            .execute()
 
         let hydratedResponse = try await supabase
             .from("timesheets")

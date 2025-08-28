@@ -85,18 +85,6 @@ class TimesheetViewModel: ObservableObject {
         }
     }
 
-    func updateTimesheetTotals(id: UUID, totalHours: Double?) async {
-        do {
-            _ = try await supabase
-                .from("timesheets")
-                .update(["total_hours": totalHours])
-                .eq("id", value: id)
-                .execute()
-        } catch {
-            print("Update error: \(error.localizedDescription)")
-        }
-    }
-
     func deleteTimesheet(id: UUID) async {
         if let index = timesheets.firstIndex(where: { $0.id == id }) {
             timesheets.remove(at: index)
@@ -142,10 +130,5 @@ extension TimesheetViewModel {
         } else {
             timesheets.insert(hydrated, at: 0)
         }
-    }
-
-    func displayDuration(for timesheet: TimesheetWithWorkdays) -> TimeInterval {
-        if let hours = timesheet.totalHours { return hours * 3600 }
-        return (timesheet.workday).reduce(0) { $0 + $1.duration }
     }
 }

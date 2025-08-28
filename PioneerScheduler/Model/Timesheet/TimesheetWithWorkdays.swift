@@ -14,7 +14,6 @@ struct TimesheetWithWorkdays: Codable, Identifiable, Hashable {
         case userId = "user_id"
         case startDate = "start_date"
         case endDate = "end_date"
-        case totalHours = "total_hours"
         case workday
     }
 
@@ -22,6 +21,5 @@ struct TimesheetWithWorkdays: Codable, Identifiable, Hashable {
     var userId: UUID
     var startDate: Date
     var endDate: Date
-    var totalHours: Double?
     var workday: [Workday]
 }
