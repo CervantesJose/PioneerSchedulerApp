@@ -15,4 +15,7 @@ iOS application that matches the functionality demonstrated in the provided vide
 
 https://github.com/user-attachments/assets/2323ad17-6bbd-436b-a2f1-17aa315ebaa9
 
+### Example generated PDF
+[timesheet.pdf](https://github.com/user-attachments/files/22016932/timesheet.pdf)
+
 Target platform: iPhone (iOS 17+)
