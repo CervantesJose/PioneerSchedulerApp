@@ -4,7 +4,8 @@ Timesheets app to help employee manage hours worked/week and tasks completed/day
 ## Overview
 
 iOS application that matches the functionality demonstrated in the provided video:
-- Create/delete workdays
+- Create/delete/update timesheets
+- Create/delete/update workdays
 - For each workday: pick date, start/end times; enter multiple task descriptions.
 - Automatically compute per‑day and total hours
 - Generate a clean PDF containing timesheet title, date(s), list of workdays with tasks and durations, and Total Time.
