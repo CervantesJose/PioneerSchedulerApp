@@ -117,11 +117,14 @@ struct TimesheetView: View {
                 viewModel.apply(hydrated: hydrated)
             }
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
     }
 
     private func timesheetRow(timesheet: TimesheetWithWorkdays) -> some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack {
                 Text(
                     "\(timesheet.startDate.formatted(date: .abbreviated, time: .omitted)) - \(timesheet.endDate.formatted(date: .abbreviated, time: .omitted))"
                 )
