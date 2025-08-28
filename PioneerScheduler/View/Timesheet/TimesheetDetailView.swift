@@ -131,7 +131,7 @@ struct TimesheetPDFView: View {
                         .font(.headline)
 
                     if workday.tasks.isEmpty == false {
-                        Text(workday.tasks.joined(separator: ", "))
+                        Text(workday.tasks.joined(separator: "\n"))
                             .font(.subheadline)
                     }
 
