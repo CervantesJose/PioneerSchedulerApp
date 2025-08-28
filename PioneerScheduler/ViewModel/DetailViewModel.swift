@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 @MainActor
 final class DetailViewModel: ObservableObject {
@@ -65,5 +66,26 @@ final class DetailViewModel: ObservableObject {
             .execute()
 
         return try decoder.decode(TimesheetWithWorkdays.self, from: hydratedResponse.data)
+    }
+
+    @MainActor
+    func renderPDF(timesheet: TimesheetWithWorkdays, workdays: [Workday]) -> URL? {
+    
+        let view = TimesheetPDFView(timesheet: timesheet, workdays: workdays)
+        let renderer = ImageRenderer(content: view)
+        let url = URL.documentsDirectory.appending(
+            path: "timesheet.pdf"
+        )
+
+        renderer.render { size, context in
+            var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else { return }
+            pdf.beginPDFPage(nil)
+            context(pdf)
+            pdf.endPDFPage()
+            pdf.closePDF()
+        }
+
+        return url
     }
 }
