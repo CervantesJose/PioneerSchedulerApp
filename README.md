@@ -3,7 +3,8 @@ Timesheets app to help employee manage hours worked/week and tasks completed/day
 
 ## Overview
 
-iOS application that matches the functionality demonstrated in the provided video:
+iOS application functionality:
+- Create/Login user (email or Apple Sign-In)
 - Create/delete/update timesheets
 - Create/delete/update workdays
 - For each workday: pick date, start/end times; enter multiple task descriptions.
@@ -13,7 +14,13 @@ iOS application that matches the functionality demonstrated in the provided vide
 - On‑device data persistence so timesheets/workdays persist between launches.
 - Light/dark mode; reasonable accessibility defaults; friendly error messages.
 
-https://github.com/user-attachments/assets/2323ad17-6bbd-436b-a2f1-17aa315ebaa9
+### App screenshots
+| Login View | List View | Timesheet View |
+| ---------- | --------- | -------------- |
+
+|<img width="230" height="460" alt="loginView" src="https://github.com/user-attachments/assets/d5b7eb57-fa7b-45f7-859a-879d70b23c36" /> | <img width="225" height="460" alt="listView" src="https://github.com/user-attachments/assets/0c8fdcba-f06b-4c5b-9cdf-53c5cd4c59b7" /> | <img width="220" height="457" alt="timesheetView" src="https://github.com/user-attachments/assets/2541ac37-7f67-4210-a3c2-aeb93e62247d" /> |
+
+
 
 ### Example generated PDF
 [timesheet.pdf](https://github.com/user-attachments/files/22016932/timesheet.pdf)
