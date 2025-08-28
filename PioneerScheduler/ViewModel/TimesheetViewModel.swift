@@ -36,7 +36,7 @@ class TimesheetViewModel: ObservableObject {
                 .from("timesheets")
                 .select("*, workday(*)")
                 .eq("user_id", value: userID)
-                .order("start_date", ascending: false)
+                .order("end_date", ascending: false)
                 .execute()
 
             let timesheets: [TimesheetWithWorkdays] = try decoder.decode(

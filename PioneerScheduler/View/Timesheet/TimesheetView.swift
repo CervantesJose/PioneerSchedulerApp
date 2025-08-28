@@ -120,6 +120,7 @@ struct TimesheetView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Color(.systemGroupedBackground))
+        .animation(.default, value: viewModel.timesheets)
     }
 
     private func timesheetRow(timesheet: TimesheetWithWorkdays) -> some View {
