@@ -17,7 +17,8 @@ struct WorkdayView: View {
 
             ForEach(workday.tasks.indices, id: \.self) { index in
                 HStack {
-                    TextField("Task", text: $workday.tasks[index])
+                    TextField("Task", text: $workday.tasks[index], axis: .vertical)
+                        .lineLimit(1...3)
                         .pioneerTextField()
 
                     Menu {
