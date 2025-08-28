@@ -9,8 +9,10 @@ import SwiftUI
 
 struct CreateTimesheetView: View {
     @EnvironmentObject var viewModel: TimesheetViewModel
-    @State private var startDate: Date = .now
-    @State private var endDate: Date = Date(timeIntervalSinceNow: 186000)
+    @State private var startDate: Date = (Calendar.current.dateInterval(of: .weekOfYear, for: .now)?.start ?? .now)
+    @State private var endDate: Date = (
+        Calendar.current.dateInterval(of: .weekOfYear, for: .now)?.end.addingTimeInterval(-1) ?? .now
+    )
 
     var body: some View {
         NavigationStack {
