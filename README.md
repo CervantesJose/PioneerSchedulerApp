@@ -1,6 +1,9 @@
 # Pioneer Scheduling App
 Timesheets app to help employee manage hours worked/week and tasks completed/day and send PDF to employer.
 
+#### Testflight link:
+https://testflight.apple.com/join/qrb95hKU
+
 ## Overview
 
 iOS application functionality:
