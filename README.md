@@ -29,10 +29,10 @@ iOS application functionality:
 [timesheet.pdf](https://github.com/user-attachments/files/22016932/timesheet.pdf)
 
 ### Tech stack
-Language: Swift
-UI: SwiftUI
-Architectural pattern: MVVM
-Dependency manager: Swift Package Manager (SPM)
-Other Key Libraries: Supabase, AuthenticationServices, Swift Concurrency
-Dev Tools: Xcode, Git, GitHub
-Target platform: iPhone (iOS 17+)
+- Language: Swift
+- UI: SwiftUI
+- Architectural pattern: MVVM
+- Dependency manager: Swift Package Manager (SPM)
+- Other Key Libraries: Supabase, AuthenticationServices, Swift Concurrency
+- Dev Tools: Xcode, Git, GitHub
+- Target platform: iPhone (iOS 17+)
