@@ -9,17 +9,13 @@ import SwiftUI
 
 struct PioneerButtonStyle: ViewModifier {
 
-    private enum Constants {
-        static let buttonPadding: CGFloat = 8
-    }
-
     func body(content: Content) -> some View {
         content
             .font(.headline)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, minHeight: 44)
             .background(.blue)
-            .cornerRadius(Constants.buttonPadding)
+            .cornerRadius(8)
             .padding(.horizontal)
     }
 }

@@ -43,7 +43,7 @@ struct Workday: Codable, Identifiable, Hashable {
 }
 
 extension TimeInterval {
-    // "H:MM" (e.g., 7:30)
+    // e.g., 7h:30m
     var asHourMinuteString: String {
         let totalMinutes = Int((self / 60))
         let hours = totalMinutes / 60

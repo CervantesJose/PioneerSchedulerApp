@@ -9,6 +9,7 @@ import SwiftUI
 
 @MainActor
 final class DetailViewModel: ObservableObject {
+
     @Published var workdays: [Workday]
     let timesheetId: UUID
     private let originalIds: Set<UUID> // tracks originals to detect deletions
@@ -42,7 +43,7 @@ final class DetailViewModel: ObservableObject {
         for index in workdays.indices { workdays[index].timesheetId = timesheetId }
 
         try await supabase
-            .from("workday")
+            .from(SBConstants.workdayTable)
             .upsert(workdays)
             .execute()
 
@@ -51,16 +52,16 @@ final class DetailViewModel: ObservableObject {
 
         if deletedIds.isEmpty == false {
             try await supabase
-                .from("workday")
+                .from(SBConstants.workdayTable)
                 .delete()
-                .in("id", values: deletedIds)
+                .in(SBConstants.idStringColumn, values: deletedIds)
                 .execute()
         }
 
         let hydratedResponse = try await supabase
-            .from("timesheets")
-            .select("*, workday(*)")
-            .eq("id", value: timesheetId)
+            .from(SBConstants.timesheetsTable)
+            .select(SBConstants.workdayColumn)
+            .eq(SBConstants.idStringColumn, value: timesheetId)
             .single()
             .execute()
 

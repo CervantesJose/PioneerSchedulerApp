@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CreateTimesheetView: View {
+
     @EnvironmentObject var viewModel: TimesheetViewModel
     @State private var startDate: Date = (Calendar.current.dateInterval(of: .weekOfYear, for: .now)?.start ?? .now)
     @State private var endDate: Date = (
@@ -15,8 +16,8 @@ struct CreateTimesheetView: View {
     )
 
     var body: some View {
-        NavigationStack {
 
+        NavigationStack {
             VStack(alignment: .leading, spacing: 20) {
                 Section("Week of:") {
                     HStack {

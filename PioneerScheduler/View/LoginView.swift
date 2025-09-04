@@ -19,9 +19,9 @@ struct LoginView: View {
             ZStack {
 
                 BackgroundView()
+                    .ignoresSafeArea()
 
                 VStack(spacing: 16) {
-                    // Email field
                     TextField("Email", text: $viewModel.userEmail)
                         .keyboardType(.emailAddress)
                         .textContentType(.username)
@@ -31,14 +31,12 @@ struct LoginView: View {
                         .background(.ultraThickMaterial)
                         .cornerRadius(8)
 
-                    // Password field
                     SecureField("Password", text: $viewModel.userPassword)
                         .textContentType(.password)
                         .padding()
                         .background(.ultraThickMaterial)
                         .cornerRadius(8)
 
-                    // Login button
                     Button {
                         viewModel.handleSignInButtonTapped()
                     } label: {
@@ -61,7 +59,7 @@ struct LoginView: View {
 
                     }
 
-                    orSeparatorView()
+                    OrSeparatorView()
 
                     SignInWithAppleButton { request in
                         request.requestedScopes = [.email, .fullName]
@@ -76,33 +74,6 @@ struct LoginView: View {
                 .padding()
             }
         }
-    }
-}
-
-private func orSeparatorView() -> some View {
-        return HStack {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundStyle(.secondary)
-            
-            Text("OR")
-                .foregroundStyle(.secondary)
-            
-            Rectangle()
-                .frame(height: 1)
-                .foregroundStyle(.secondary)
-        }
-        .padding(.horizontal, 16)
-}
-
-struct BackgroundView: View {
-    var body: some View {
-        Rectangle()
-            .fill(Gradient(colors:
-                            [Color("backgroundColor"),
-                             Color("secondaryBackgroundColor")
-                            ]))
-            .ignoresSafeArea()
     }
 }
 

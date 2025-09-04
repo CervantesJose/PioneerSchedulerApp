@@ -8,6 +8,16 @@
 import Supabase
 import SwiftUI
 
+enum SBConstants {
+    static let workdayTable = "workday"
+    static let timesheetsTable = "timesheets"
+    static let workdayColumn = "*, workday(*)"
+    static let idStringColumn = "id"
+    static let uidColumn = "user_id"
+    static let endDateColumn = "end_date"
+    static let all = "*"
+}
+
 @MainActor
 class TimesheetViewModel: ObservableObject {
 
@@ -33,10 +43,10 @@ class TimesheetViewModel: ObservableObject {
 
         do {
             let response = try await supabase
-                .from("timesheets")
-                .select("*, workday(*)")
-                .eq("user_id", value: userID)
-                .order("end_date", ascending: false)
+                .from(SBConstants.timesheetsTable)
+                .select(SBConstants.workdayColumn)
+                .eq(SBConstants.uidColumn, value: userID)
+                .order(SBConstants.endDateColumn, ascending: false)
                 .execute()
 
             let timesheets: [TimesheetWithWorkdays] = try decoder.decode(
@@ -63,17 +73,17 @@ class TimesheetViewModel: ObservableObject {
 
         do {
             let response = try await supabase
-                .from("timesheets")
+                .from(SBConstants.timesheetsTable)
                 .insert(newTimesheet)
-                .select("*")
+                .select(SBConstants.all)
                 .single()
                 .execute()
 
             let inserted = try decoder.decode(TimesheetRow.self, from: response.data)
             let hydratedResponse = try await supabase
-                .from("timesheets")
-                .select("*, workday(*)")
-                .eq("id", value: inserted.id)
+                .from(SBConstants.timesheetsTable)
+                .select(SBConstants.workdayColumn)
+                .eq(SBConstants.idStringColumn, value: inserted.id)
                 .single()
                 .execute()
 
@@ -92,9 +102,9 @@ class TimesheetViewModel: ObservableObject {
 
         do {
             try await supabase
-                .from("timesheets")
+                .from(SBConstants.timesheetsTable)
                 .delete()
-                .eq("id", value: id)
+                .eq(SBConstants.idStringColumn, value: id)
                 .execute()
         } catch {
             print("Error deleting timesheet: \(error)")
