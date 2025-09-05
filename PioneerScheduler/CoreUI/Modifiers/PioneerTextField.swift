@@ -12,7 +12,7 @@ struct PioneerTextField: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding()
-            .background(Color(.secondarySystemBackground))
+            .background(.regularMaterial)
             .cornerRadius(10)
     }
 }
