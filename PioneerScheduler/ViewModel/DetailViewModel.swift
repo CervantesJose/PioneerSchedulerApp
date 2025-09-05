@@ -73,12 +73,14 @@ final class DetailViewModel: ObservableObject {
     
         let view = TimesheetPDFView(timesheet: timesheet, workdays: workdays)
         let renderer = ImageRenderer(content: view)
-        let url = URL.documentsDirectory.appending(
-            path: "timesheet.pdf"
-        )
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd"
+        let fileName = "timesheet_\(formatter.string(from: timesheet.startDate))_\(formatter.string(from: timesheet.endDate)).pdf"
+        let url = URL.documentsDirectory.appending(path: fileName)
 
         renderer.render { size, context in
-            var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            var box = CGRect(x: .zero, y: .zero, width: size.width, height: size.height)
             guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else { return }
             pdf.beginPDFPage(nil)
             context(pdf)
