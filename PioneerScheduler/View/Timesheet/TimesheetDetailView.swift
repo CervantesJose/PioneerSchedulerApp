@@ -13,6 +13,7 @@ struct TimesheetDetailView: View {
     let onSave: (TimesheetWithWorkdays) -> Void
     let timesheet: TimesheetWithWorkdays
 
+    @State private var isShowingExportAlert = false
     @State private var exportURL: URL?
 
     init(timesheet: TimesheetWithWorkdays, onSave: @escaping (TimesheetWithWorkdays) -> Void) {
@@ -51,9 +52,10 @@ struct TimesheetDetailView: View {
                         ShareLink("Share PDF", item: url)
                     } else {
                         Button {
+                            isShowingExportAlert.toggle()
                             exportURL = viewModel.renderPDF(timesheet: timesheet, workdays: viewModel.workdays)
                         } label: {
-                            Label("Render PDF", systemImage: "square.and.arrow.up")
+                            Label("Create PDF", systemImage: "document.badge.arrow.up")
                         }
                     }
                 }
@@ -62,6 +64,9 @@ struct TimesheetDetailView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .alert("PDF created", isPresented: $isShowingExportAlert) {
+            Button("OK") { }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
