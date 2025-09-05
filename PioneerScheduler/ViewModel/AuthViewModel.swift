@@ -13,6 +13,14 @@ import SwiftUI
 @Observable
 final class AuthViewModel {
 
+    private enum Constants {
+        static let loginFailedTitle = "Login Failed"
+        static let loginFailedMessage = "Please enter correct email and/or password"
+        static let appleSignInError = "There was an error signing in with given Apple ID credentials"
+        static let registrationFailedTitle = "Registration failed"
+        static let registrationFailedMessage = "Please enter valid email and/or password."
+    }
+
     private var timesheetViewModel = TimesheetViewModel()
 
     var userEmail = ""
@@ -58,8 +66,8 @@ final class AuthViewModel {
     // Login with email
     func handleSignInButtonTapped() {
         guard isValid else {
-            alertTitle = "Login Failed"
-            alertMessage = "Please enter correct email and/or password"
+            alertTitle = Constants.loginFailedTitle
+            alertMessage = Constants.loginFailedMessage
             showAlert()
             return
         }
@@ -133,7 +141,7 @@ final class AuthViewModel {
 
         guard let identityTokenData = credential.identityToken,
               let identityToken = String(data: identityTokenData, encoding: .utf8) else {
-            authResult = .failure("There was an error signing in with given Apple ID credentials" as! Error)
+            authResult = .failure(Constants.appleSignInError as! Error)
             return
         }
 
@@ -182,8 +190,8 @@ final class AuthViewModel {
     }
 
     func registrationError() {
-        alertTitle = "Registration failed"
-        alertMessage = "Please enter valid email and/or password."
+        alertTitle = Constants.registrationFailedTitle
+        alertMessage = Constants.registrationFailedMessage
         showAlert()
     }
 }
