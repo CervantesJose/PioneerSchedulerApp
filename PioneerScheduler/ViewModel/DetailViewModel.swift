@@ -15,6 +15,7 @@ final class DetailViewModel: ObservableObject {
     private let originalIds: Set<UUID> // tracks originals to detect deletions
 
     var totalDuration: TimeInterval { workdays.reduce(0) { $0 + $1.duration } }
+    var exportURL: URL?
 
     private let decoder = JSONDecoder.supabase
 
@@ -68,7 +69,6 @@ final class DetailViewModel: ObservableObject {
         return try decoder.decode(TimesheetWithWorkdays.self, from: hydratedResponse.data)
     }
 
-    @MainActor
     func renderPDF(timesheet: TimesheetWithWorkdays, workdays: [Workday]) -> URL? {
     
         let view = TimesheetPDFView(timesheet: timesheet, workdays: workdays)

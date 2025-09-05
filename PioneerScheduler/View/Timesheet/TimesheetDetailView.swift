@@ -14,7 +14,7 @@ struct TimesheetDetailView: View {
     let timesheet: TimesheetWithWorkdays
 
     @State private var isShowingExportAlert = false
-    @State private var exportURL: URL?
+    @State private var isSaving = false
 
     init(timesheet: TimesheetWithWorkdays, onSave: @escaping (TimesheetWithWorkdays) -> Void) {
         self.timesheet = timesheet
@@ -35,12 +35,12 @@ struct TimesheetDetailView: View {
                 }
                 .onDelete { indexSet in
                     viewModel.workdays.remove(atOffsets: indexSet)
-                    exportURL = nil
+                    resetURL()
                 }
 
                 Button(action: {
                     viewModel.addWorkday()
-                    exportURL = nil
+                    resetURL()
                 }) {
                     Label("Add workday", systemImage: "plus")
                 }
@@ -48,38 +48,30 @@ struct TimesheetDetailView: View {
             
             Section(header: Text("Total time: \(viewModel.totalDuration.asHourMinuteString)")) {
                 VStack {
-                    if let url = exportURL {
+                    if let url = viewModel.exportURL {
                         ShareLink("Share PDF", item: url)
                     } else {
                         Button {
-                            isShowingExportAlert.toggle()
-                            exportURL = viewModel.renderPDF(timesheet: timesheet, workdays: viewModel.workdays)
+                            saveAndExport(timesheet: timesheet)
                         } label: {
                             Label("Create PDF", systemImage: "document.badge.arrow.up")
                         }
+                        .disabled(viewModel.workdays.isEmpty || isSaving)
                     }
                 }
-                .disabled(viewModel.workdays.isEmpty)
             }
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .alert("PDF created", isPresented: $isShowingExportAlert) {
             Button("OK") { }
+        } message: {
+            Text("You can now share the file. Timesheet saved.")
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Save") {
-                    Task {
-                        do {
-                            let hydrated = try await viewModel.save()
-                            onSave(hydrated)
-                            dismiss()
-                        } catch {
-                            print("Save failed: \(error.localizedDescription)")
-                        }
-                    }
-                }
+                Button("Save", action: saveAndDismiss)
+                    .disabled(isSaving)
             }
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
@@ -89,6 +81,50 @@ struct TimesheetDetailView: View {
                 }
             }
         }
+    }
+
+    private func saveAndDismiss() {
+        guard isSaving == false else { return }
+        isSaving = true
+        Task {
+            do {
+                let hydrated = try await viewModel.save()
+                await MainActor.run {
+                    onSave(hydrated)
+                    dismiss()
+                }
+            } catch {
+                print("Save failed: \(error.localizedDescription)")
+            }
+            await MainActor.run { isSaving = false }
+        }
+    }
+
+    private func saveAndExport(timesheet: TimesheetWithWorkdays) {
+        guard isSaving == false else { return }
+        isSaving = true
+        Task {
+            do {
+                let hydrated = try await viewModel.save()
+                let url = viewModel.renderPDF(timesheet: timesheet, workdays: viewModel.workdays)
+                await MainActor.run {
+                    onSave(hydrated)
+                    viewModel.exportURL = url
+                    isShowingExportAlert = true
+                }
+            } catch {
+                print("Export flow failed: \(error.localizedDescription)")
+                await MainActor.run {
+                    resetURL()
+                    isShowingExportAlert = false
+                }
+            }
+            await MainActor.run { isSaving = false }
+        }
+    }
+
+    private func resetURL() {
+        viewModel.exportURL = nil
     }
 }
 
