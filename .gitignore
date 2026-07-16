@@ -4,7 +4,7 @@
 ## Specific files
 PioneerScheduler/Info.plist
 AppBlog.rtf
-PioneerScheduler/Utils/Constants.swift
+PioneerScheduler/App/Utils/Constants.swift
 
 ## Obj-C/Swift specific
 *.hmap
