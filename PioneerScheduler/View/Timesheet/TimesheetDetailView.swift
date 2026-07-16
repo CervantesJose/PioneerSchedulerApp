@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct TimesheetDetailView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel: DetailViewModel
+    @Environment(\.dismiss) private var dismiss
+    @State private var viewModel: DetailViewModel
     let onSave: (TimesheetWithWorkdays) -> Void
     let timesheet: TimesheetWithWorkdays
 
     @State private var isShowingExportAlert = false
     @State private var isSaving = false
+    @FocusState private var isTaskFieldFocused: Bool
 
     init(timesheet: TimesheetWithWorkdays, onSave: @escaping (TimesheetWithWorkdays) -> Void) {
         self.timesheet = timesheet
-        _viewModel = StateObject(wrappedValue: DetailViewModel(timesheet: timesheet))
+        _viewModel = State(initialValue: DetailViewModel(timesheet: timesheet))
         self.onSave = onSave
     }
 
@@ -31,7 +32,7 @@ struct TimesheetDetailView: View {
         Form {
             Section("Workdays") {
                 ForEach($viewModel.workdays) { $workday in
-                    WorkdayView(workday: $workday)
+                    WorkdayView(workday: $workday, isTaskFieldFocused: $isTaskFieldFocused)
                 }
                 .onDelete { indexSet in
                     viewModel.workdays.remove(atOffsets: indexSet)
@@ -76,8 +77,7 @@ struct TimesheetDetailView: View {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
                 Button("Done") {
-                    UIApplication.shared
-                        .sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    isTaskFieldFocused = false
                 }
             }
         }
@@ -140,6 +140,5 @@ struct TimesheetDetailView: View {
             ),
             onSave: { _ in }
         )
-        .environmentObject(TimesheetViewModel.preview())
     }
 }

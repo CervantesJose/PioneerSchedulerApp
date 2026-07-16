@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WorkdayView: View {
     @Binding var workday: Workday
+    var isTaskFieldFocused: FocusState<Bool>.Binding
 
     var body: some View {
 
@@ -19,6 +20,7 @@ struct WorkdayView: View {
                 HStack {
                     TextField("Task", text: $workday.tasks[index], axis: .vertical)
                         .lineLimit(1...3)
+                        .focused(isTaskFieldFocused)
                         .pioneerTextField()
 
                     Menu {
@@ -32,6 +34,7 @@ struct WorkdayView: View {
                             .font(.headline)
                             .padding(.trailing, 8)
                     }
+                    .accessibilityLabel("Task options")
                 }
             }
 
@@ -50,20 +53,14 @@ struct WorkdayView: View {
             
             Text("Time worked: \(workday.duration.asHourMinuteString)")
                 .font(.footnote)
-                .foregroundColor(.secondary)
-                .cornerRadius(10)
+                .foregroundStyle(.secondary)
         }
     }
 }
 
 #Preview {
-    struct Preview: View {
-        @State private var workday = Workday.mockWorkDay()
+    @Previewable @State var workday = Workday.mockWorkDay()
+    @Previewable @FocusState var isFocused: Bool
 
-        var body: some View {
-            WorkdayView(workday: $workday)
-        }
-    }
-
-    return Preview()
+    WorkdayView(workday: $workday, isTaskFieldFocused: $isFocused)
 }

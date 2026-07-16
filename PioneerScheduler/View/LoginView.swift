@@ -29,13 +29,13 @@ struct LoginView: View {
                         .autocorrectionDisabled()
                         .padding()
                         .background(.ultraThickMaterial)
-                        .cornerRadius(8)
+                        .clipShape(.rect(cornerRadius: 8))
 
                     SecureField("Password", text: $viewModel.userPassword)
                         .textContentType(.password)
                         .padding()
                         .background(.ultraThickMaterial)
-                        .cornerRadius(8)
+                        .clipShape(.rect(cornerRadius: 8))
 
                     Button {
                         viewModel.handleSignInButtonTapped()

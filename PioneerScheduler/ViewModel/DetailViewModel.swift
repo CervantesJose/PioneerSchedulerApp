@@ -8,9 +8,10 @@
 import SwiftUI
 
 @MainActor
-final class DetailViewModel: ObservableObject {
+@Observable
+final class DetailViewModel {
 
-    @Published var workdays: [Workday]
+    var workdays: [Workday]
     let timesheetId: UUID
     private let originalIds: Set<UUID> // tracks originals to detect deletions
 

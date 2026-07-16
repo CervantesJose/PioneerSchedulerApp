@@ -15,7 +15,7 @@ extension TimesheetWithWorkdays {
                 userId: UUID(),
                 startDate: .now,
                 endDate: .now,
-                workday: Workday.mockData(),
+                workday: Workday.mockData()
             ),
             TimesheetWithWorkdays(
                 id: UUID(),
@@ -32,20 +32,5 @@ extension TimesheetWithWorkdays {
                 workday: []
             )
         ]
-    }
-
-    init(
-        id: UUID,
-        title: String,
-        userId: UUID,
-        startDate: Date,
-        endDate: Date,
-        workday: [Workday]
-    ) {
-        self.id = id
-        self.userId = userId
-        self.startDate = startDate
-        self.endDate = endDate
-        self.workday = workday
     }
 }

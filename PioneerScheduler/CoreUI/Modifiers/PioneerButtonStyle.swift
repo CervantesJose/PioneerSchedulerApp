@@ -15,7 +15,7 @@ struct PioneerButtonStyle: ViewModifier {
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, minHeight: 44)
             .background(.blue)
-            .cornerRadius(8)
+            .clipShape(.rect(cornerRadius: 8))
             .padding(.horizontal)
     }
 }

@@ -16,16 +16,13 @@ final class AuthViewModel {
     private enum Constants {
         static let loginFailedTitle = "Login Failed"
         static let loginFailedMessage = "Please enter correct email and/or password"
-        static let appleSignInError = "There was an error signing in with given Apple ID credentials"
+        static let authErrorTitle = "Authentication Failed"
         static let registrationFailedTitle = "Registration failed"
         static let registrationFailedMessage = "Please enter valid email and/or password."
     }
 
-    private var timesheetViewModel = TimesheetViewModel()
-
     var userEmail = ""
     var userPassword = ""
-    var isAuthenticated = false
 
     var isLoading = false
     var isShowingAlert = false
@@ -35,6 +32,7 @@ final class AuthViewModel {
     var authResult: Result<Void, Error>? {
         didSet {
             if case .failure(let error) = authResult {
+                alertTitle = Constants.authErrorTitle
                 alertMessage = error.localizedDescription
                 showAlert()
             }
@@ -55,9 +53,9 @@ final class AuthViewModel {
         isShowingAlert = true
     }
 
-    func toggleLoadingState() {
+    private func setLoading(_ value: Bool) {
         withAnimation {
-            isLoading.toggle()
+            isLoading = value
         }
     }
 
@@ -72,19 +70,14 @@ final class AuthViewModel {
             return
         }
 
-        let newViewModel = TimesheetViewModel()
-        self.timesheetViewModel = newViewModel
-
         Task {
             await signIn()
         }
     }
 
-    @MainActor
     private func signIn() async {
-        toggleLoadingState()
-
-        defer { toggleLoadingState() }
+        setLoading(true)
+        defer { setLoading(false) }
 
         do {
             try await supabase.auth.signIn(
@@ -92,9 +85,8 @@ final class AuthViewModel {
                 password: userPassword
             )
             authResult = .success(())
-
-            appState.isAuthenticated = .loading
-            await appState.checkLoginStatus()
+            // The auth-state listener in AppState reacts to the sign-in event
+            // and updates the root view; no further work is needed here.
         } catch {
             authResult = .failure(error)
         }
@@ -110,7 +102,6 @@ final class AuthViewModel {
     private func signOut() async {
         do {
             try await supabase.auth.signOut()
-            isAuthenticated = false
         } catch {
             print(error.localizedDescription)
         }
@@ -132,28 +123,21 @@ final class AuthViewModel {
     }
 
     private func signInWithApple(credential: ASAuthorizationAppleIDCredential) async {
-        toggleLoadingState()
-
-        defer { toggleLoadingState() }
-
-        let newViewModel = TimesheetViewModel()
-        self.timesheetViewModel = newViewModel
+        setLoading(true)
+        defer { setLoading(false) }
 
         guard let identityTokenData = credential.identityToken,
               let identityToken = String(data: identityTokenData, encoding: .utf8) else {
-            authResult = .failure(Constants.appleSignInError as! Error)
+            authResult = .failure(AuthError.appleCredentialUnavailable)
             return
         }
 
         do {
             try await supabase.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: identityToken))
             authResult = .success(())
-            appState.isAuthenticated = .loading
-            await appState.checkLoginStatus()
         } catch {
             authResult = .failure(error)
         }
-
     }
 
     // MARK: Registering with email
@@ -169,14 +153,10 @@ final class AuthViewModel {
         }
     }
 
-    @MainActor
     private func register() async {
-        toggleLoadingState()
-        
-        defer {
-            toggleLoadingState()
-        }
-        
+        setLoading(true)
+        defer { setLoading(false) }
+
         do {
             try await supabase.auth.signUp(
                 email: userEmail,

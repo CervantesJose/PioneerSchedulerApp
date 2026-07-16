@@ -8,18 +8,9 @@
 import Supabase
 import SwiftUI
 
-enum SBConstants {
-    static let workdayTable = "workday"
-    static let timesheetsTable = "timesheets"
-    static let workdayColumn = "*, workday(*)"
-    static let idStringColumn = "id"
-    static let uidColumn = "user_id"
-    static let endDateColumn = "end_date"
-    static let all = "*"
-}
-
 @MainActor
-class TimesheetViewModel: ObservableObject {
+@Observable
+final class TimesheetViewModel {
 
     enum LoadingState {
         case idle
@@ -28,10 +19,10 @@ class TimesheetViewModel: ObservableObject {
         case failed(Error)
     }
 
-    @Published var timesheets: [TimesheetWithWorkdays] = []
+    var timesheets: [TimesheetWithWorkdays] = []
 
-    @Published var isCreatingNewItemSheetPresented = false
-    @Published var state: LoadingState = .idle
+    var isCreatingNewItemSheetPresented = false
+    var state: LoadingState = .idle
 
     private let decoder = JSONDecoder.supabase
 

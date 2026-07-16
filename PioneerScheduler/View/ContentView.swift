@@ -1,36 +1,28 @@
-//
-//  ContentView.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 9/24/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(AppState.self) var appState
-    @StateObject private var timesheetsViewModel = TimesheetViewModel()
-    
+    @Environment(AppState.self) private var appState
+    @State private var timesheetsViewModel = TimesheetViewModel()
+
     var body: some View {
         Group {
-            switch appState.isAuthenticated {
+            switch appState.authState {
             case .loading:
-                ProgressView("Loading...")
+                ProgressView("Loading…")
             case .authenticated:
                 TimesheetView(authViewModel: AuthViewModel(appState: appState))
-                    .environmentObject(timesheetsViewModel)
-            case .unathenticated:
+                    .environment(timesheetsViewModel)
+            case .unauthenticated:
                 LoginView(viewModel: AuthViewModel(appState: appState))
             }
         }
-        .onAppear {
-            Task {
-                await appState.checkLoginStatus()
-            }
+        .task {
+            await appState.checkLoginStatus()
         }
     }
 }
 
 #Preview {
     ContentView()
+        .environment(AppState.preview())
 }

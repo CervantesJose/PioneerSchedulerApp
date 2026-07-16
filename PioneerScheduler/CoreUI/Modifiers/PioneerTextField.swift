@@ -13,7 +13,7 @@ struct PioneerTextField: ViewModifier {
         content
             .padding()
             .background(.regularMaterial)
-            .cornerRadius(10)
+            .clipShape(.rect(cornerRadius: 10))
     }
 }
 

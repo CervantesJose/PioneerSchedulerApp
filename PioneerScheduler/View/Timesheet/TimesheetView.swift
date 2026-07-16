@@ -9,11 +9,12 @@ import SwiftUI
 
 struct TimesheetView: View {
 
-    @EnvironmentObject var viewModel: TimesheetViewModel
+    @Environment(TimesheetViewModel.self) private var viewModel
     var authViewModel: AuthViewModel
 
     var body: some View {
-        NavigationStack {
+        @Bindable var viewModel = viewModel
+        return NavigationStack {
             Group {
                 switch viewModel.state {
                 case .idle, .loading:
@@ -41,21 +42,17 @@ struct TimesheetView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
+                    Button("Sign out") {
                         authViewModel.handleSignOut()
-                    } label: {
-                        Text("Sign out")
-                            .font(.system(size: 18))
-                            .fontWeight(.bold)
                     }
+                    .font(.headline)
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                    Button("New timesheet", systemImage: "plus") {
                         viewModel.toggleIsCreatingNewItemSheetPresented()
-                    } label: {
-                        Image(systemName: "plus")
                     }
+                    .labelStyle(.iconOnly)
                     .buttonStyle(.borderedProminent)
                     .clipShape(Circle())
                 }
@@ -63,7 +60,7 @@ struct TimesheetView: View {
             .sheet(isPresented: $viewModel.isCreatingNewItemSheetPresented) {
                 NavigationStack {
                     CreateTimesheetView()
-                        .environmentObject(viewModel)
+                        .environment(viewModel)
                         .presentationDetents([.fraction(0.35)])
                 }
             }
@@ -86,7 +83,7 @@ struct TimesheetView: View {
                 Text("Create a timesheet")
                     .padding()
                     .background(Color.white)
-                    .cornerRadius(10)
+                    .clipShape(.rect(cornerRadius: 10))
                     .shadow(radius: 2)
             }
             Spacer()
@@ -148,5 +145,5 @@ struct TimesheetView: View {
 
 #Preview {
     TimesheetView(authViewModel: .preview())
-        .environmentObject(TimesheetViewModel.preview())
+        .environment(TimesheetViewModel.preview())
 }

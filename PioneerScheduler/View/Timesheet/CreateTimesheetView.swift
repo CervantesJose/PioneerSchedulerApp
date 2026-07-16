@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreateTimesheetView: View {
 
-    @EnvironmentObject var viewModel: TimesheetViewModel
+    @Environment(TimesheetViewModel.self) private var viewModel
     @State private var startDate: Date = (Calendar.current.dateInterval(of: .weekOfYear, for: .now)?.start ?? .now)
     @State private var endDate: Date = (
         Calendar.current.dateInterval(of: .weekOfYear, for: .now)?.end.addingTimeInterval(-1) ?? .now
@@ -21,8 +21,10 @@ struct CreateTimesheetView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Section("Week of:") {
                     HStack {
-                        DatePicker("", selection: $startDate, displayedComponents: .date)
-                        DatePicker("", selection: $endDate, displayedComponents: .date)
+                        DatePicker("Start date", selection: $startDate, displayedComponents: .date)
+                            .labelsHidden()
+                        DatePicker("End date", selection: $endDate, displayedComponents: .date)
+                            .labelsHidden()
                     }
                     .padding(.trailing, 32)
                 }
@@ -63,6 +65,6 @@ struct CreateTimesheetView: View {
 #Preview {
     NavigationStack {
         CreateTimesheetView()
-            .environmentObject(TimesheetViewModel.preview())
+            .environment(TimesheetViewModel.preview())
     }
 }
