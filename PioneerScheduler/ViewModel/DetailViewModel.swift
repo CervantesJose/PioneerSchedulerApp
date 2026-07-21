@@ -1,10 +1,3 @@
-//
-//  DetailViewModel.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 8/21/25.
-//
-
 import SwiftUI
 
 @MainActor
@@ -13,10 +6,13 @@ final class DetailViewModel {
 
     var workdays: [Workday]
     let timesheetId: UUID
-    private let originalIds: Set<UUID> // tracks originals to detect deletions
+    private var originalIds: Set<UUID> // tracks originals to detect deletions
+    private var savedWorkdays: [Workday] // last-saved snapshot to detect edits
 
     var totalDuration: TimeInterval { workdays.reduce(0) { $0 + $1.duration } }
     var exportURL: URL?
+
+    var hasUnsavedChanges: Bool { workdays != savedWorkdays }
 
     private let decoder = JSONDecoder.supabase
 
@@ -31,6 +27,7 @@ final class DetailViewModel {
         self.timesheetId = id
         self.workdays = mapped
         self.originalIds = Set(mapped.map(\.id))
+        self.savedWorkdays = mapped
     }
 
     func addWorkday() {
@@ -66,6 +63,10 @@ final class DetailViewModel {
             .eq(SBConstants.idStringColumn, value: timesheetId)
             .single()
             .execute()
+
+        // Refresh the baselines so hasUnsavedChanges reflects the just-saved state.
+        originalIds = currentIds
+        savedWorkdays = workdays
 
         return try decoder.decode(TimesheetWithWorkdays.self, from: hydratedResponse.data)
     }

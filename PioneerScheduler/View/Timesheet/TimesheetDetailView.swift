@@ -1,10 +1,3 @@
-//
-//  TimesheetDetailView.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 6/30/25.
-//
-
 import SwiftUI
 
 struct TimesheetDetailView: View {
@@ -15,6 +8,7 @@ struct TimesheetDetailView: View {
 
     @State private var isShowingExportAlert = false
     @State private var isSaving = false
+    @State private var isShowingUnsavedChangesAlert = false
     @FocusState private var isTaskFieldFocused: Bool
 
     init(timesheet: TimesheetWithWorkdays, onSave: @escaping (TimesheetWithWorkdays) -> Void) {
@@ -30,23 +24,26 @@ struct TimesheetDetailView: View {
     var body: some View {
         
         Form {
-            Section("Workdays") {
-                ForEach($viewModel.workdays) { $workday in
-                    WorkdayView(workday: $workday, isTaskFieldFocused: $isTaskFieldFocused)
+            ForEach($viewModel.workdays) { $workday in
+                Section {
+                    WorkdayView(
+                        workday: $workday,
+                        isTaskFieldFocused: $isTaskFieldFocused,
+                        onDeleteWorkday: { deleteWorkday(id: workday.id) }
+                    )
                 }
-                .onDelete { indexSet in
-                    viewModel.workdays.remove(atOffsets: indexSet)
-                    resetURL()
-                }
+            }
 
+            Section {
                 Button(action: {
                     viewModel.addWorkday()
                     resetURL()
                 }) {
                     Label("Add workday", systemImage: "plus")
                 }
+                .buttonStyle(.borderless)
             }
-            
+
             Section(header: Text("Total time: \(viewModel.totalDuration.asHourMinuteString)")) {
                 VStack {
                     if let url = viewModel.exportURL {
@@ -64,12 +61,27 @@ struct TimesheetDetailView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .alert("PDF created", isPresented: $isShowingExportAlert) {
             Button("OK") { }
         } message: {
             Text("You can now share the file. Timesheet saved.")
         }
+        .alert("Unsaved Changes", isPresented: $isShowingUnsavedChangesAlert) {
+            Button("Save", action: saveAndDismiss)
+                .keyboardShortcut(.defaultAction)
+            Button("Discard Changes", role: .destructive) { dismiss() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("You have unsaved changes. Do you want to save them before leaving?")
+        }
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: attemptDismiss) {
+                    Label("Back", systemImage: "chevron.backward")
+                }
+                .disabled(isSaving)
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save", action: saveAndDismiss)
                     .disabled(isSaving)
@@ -81,6 +93,20 @@ struct TimesheetDetailView: View {
                 }
             }
         }
+    }
+
+    private func attemptDismiss() {
+        if viewModel.hasUnsavedChanges {
+            isTaskFieldFocused = false
+            isShowingUnsavedChangesAlert = true
+        } else {
+            dismiss()
+        }
+    }
+
+    private func deleteWorkday(id: UUID) {
+        viewModel.workdays.removeAll { $0.id == id }
+        resetURL()
     }
 
     private func saveAndDismiss() {

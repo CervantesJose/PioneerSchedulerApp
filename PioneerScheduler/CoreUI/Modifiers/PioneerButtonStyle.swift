@@ -9,7 +9,6 @@ struct PioneerButtonStyle: ViewModifier {
             .frame(maxWidth: .infinity, minHeight: 44)
             .background(.blue)
             .clipShape(.rect(cornerRadius: 8))
-            .padding(.horizontal)
     }
 }
 

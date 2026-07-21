@@ -35,7 +35,7 @@ struct LoginView: View {
                     } label: {
                         Text("Login")
                             .pioneerButtonStyle()
-                            .padding(.top)
+                            .padding([.top, .horizontal], 16)
                     }
                     .alert(viewModel.alertTitle, isPresented: $viewModel.isShowingAlert, actions: {
                         Button("OK", role: .cancel) { }
