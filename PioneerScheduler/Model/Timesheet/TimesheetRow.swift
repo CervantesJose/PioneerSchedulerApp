@@ -1,10 +1,3 @@
-//
-//  TimesheetRow.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 8/20/25.
-//
-
 import Foundation
 
 struct TimesheetRow: Codable, Identifiable, Hashable {

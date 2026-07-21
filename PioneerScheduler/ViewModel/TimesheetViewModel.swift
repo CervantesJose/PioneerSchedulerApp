@@ -1,10 +1,3 @@
-//
-//  TimesheetViewModel.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 6/24/25.
-//
-
 import Supabase
 import SwiftUI
 

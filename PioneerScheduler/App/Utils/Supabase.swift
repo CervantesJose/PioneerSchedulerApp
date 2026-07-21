@@ -1,10 +1,3 @@
-//
-//  Supabase.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 6/23/25.
-//
-
 import Foundation
 import Supabase
 

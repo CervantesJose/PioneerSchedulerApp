@@ -1,10 +1,3 @@
-//
-//  AuthenticationViewModel.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 6/23/25.
-//
-
 import AuthenticationServices
 import Supabase
 import SwiftUI

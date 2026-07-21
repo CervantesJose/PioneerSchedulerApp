@@ -1,11 +1,3 @@
-//
-//  TimesheetPDFView.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 8/28/25.
-//
-
-
 import SwiftUI
 
 struct TimesheetPDFView: View {

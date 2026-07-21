@@ -1,10 +1,3 @@
-//
-//  PioneerSchedulerApp.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 9/24/24.
-//
-
 import SwiftUI
 
 @main

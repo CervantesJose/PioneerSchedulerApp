@@ -1,10 +1,3 @@
-//
-//  Workday.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 7/15/25.
-//
-
 import Foundation
 
 struct Workday: Codable, Identifiable, Hashable {

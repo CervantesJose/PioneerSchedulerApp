@@ -1,10 +1,3 @@
-//
-//  PioneerTextField.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 8/2/25.
-//
-
 import SwiftUI
 
 struct PioneerTextField: ViewModifier {

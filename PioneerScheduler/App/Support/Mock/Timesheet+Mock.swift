@@ -1,10 +1,3 @@
-//
-//  Timesheet+Mock.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 7/3/25.
-//
-
 import Foundation
 
 extension TimesheetWithWorkdays {

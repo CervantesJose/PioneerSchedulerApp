@@ -1,10 +1,3 @@
-//
-//  Supabase+Codable.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 8/16/25.
-//
-
 import Foundation
 
 extension JSONDecoder {

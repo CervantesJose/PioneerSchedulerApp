@@ -1,10 +1,3 @@
-//
-//  TimesheetView.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 6/24/25.
-//
-
 import SwiftUI
 
 struct TimesheetView: View {

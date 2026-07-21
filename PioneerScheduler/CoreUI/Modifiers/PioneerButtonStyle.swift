@@ -1,10 +1,3 @@
-//
-//  PioneerButtonStyles.swift
-//  PioneerScheduler
-//
-//  Created by Jose Cervantes on 6/26/25.
-//
-
 import SwiftUI
 
 struct PioneerButtonStyle: ViewModifier {
