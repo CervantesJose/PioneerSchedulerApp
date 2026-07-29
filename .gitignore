@@ -6,6 +6,9 @@ PioneerScheduler/Info.plist
 AppBlog.rtf
 PioneerScheduler/App/Utils/Constants.swift
 
+## User environment
+xcuserdata/
+
 ## Obj-C/Swift specific
 *.hmap
 

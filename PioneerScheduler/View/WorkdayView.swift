@@ -8,14 +8,14 @@ struct WorkdayView: View {
     var body: some View {
         DatePicker("Date", selection: $workday.date, displayedComponents: .date)
 
-        ForEach(workday.tasks.indices, id: \.self) { index in
-            TextField("Task", text: $workday.tasks[index], axis: .vertical)
+        ForEach($workday.tasks) { $task in
+            TextField("Task", text: $task.text, axis: .vertical)
                 .lineLimit(1...3)
                 .focused(isTaskFieldFocused)
                 .pioneerTextField()
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                     Button(role: .destructive) {
-                        deleteTask(at: index)
+                        deleteTask(task)
                     } label: {
                         Label("Delete task", systemImage: "trash")
                     }
@@ -23,7 +23,7 @@ struct WorkdayView: View {
         }
 
         Button("Add task") {
-            workday.tasks.append("")
+            workday.addTask()
         }
         .pioneerButtonStyle()
 
@@ -54,10 +54,9 @@ struct WorkdayView: View {
         }
     }
 
-    private func deleteTask(at index: Int) {
-        guard workday.tasks.indices.contains(index) else { return }
+    private func deleteTask(_ task: TaskItem) {
         isTaskFieldFocused.wrappedValue = false
-        workday.tasks.remove(at: index)
+        workday.deleteTask(task)
     }
 }
 
