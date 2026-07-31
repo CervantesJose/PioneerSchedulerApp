@@ -1,0 +1,16 @@
+// Base build configuration for the PioneerScheduler target.
+//
+// Supabase credentials are declared here (empty by default) and pulled in from
+// Secrets.local.xcconfig, which is gitignored. They are surfaced to the app via
+// Info.plist ($(SUPABASE_URL) / $(SUPABASE_ANON_KEY)) and read through Config.swift.
+//
+// To set up a fresh checkout:
+//   cp Config/Secrets.local.example.xcconfig Config/Secrets.local.xcconfig
+//   # then fill in the real values from Supabase → Project Settings → API
+
+SUPABASE_URL =
+SUPABASE_ANON_KEY =
+
+// Optional include (the `?` means "no error if missing"), so a fresh clone still
+// builds; the app then traps at launch with a clear message until values are set.
+#include? "Secrets.local.xcconfig"

@@ -2,9 +2,10 @@
 # Xcode
 
 ## Specific files
-PioneerScheduler/Info.plist
 AppBlog.rtf
-PioneerScheduler/App/Utils/Constants.swift
+
+## Secrets
+Config/Secrets.local.xcconfig
 
 ## User environment
 xcuserdata/

@@ -12,6 +12,7 @@
 
 /* Begin PBXFileReference section */
 		7A4E64682CA361DA00707CAE /* PioneerScheduler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PioneerScheduler.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AC0F16000000000000000C0 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Base.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +51,7 @@
 		7A4E645F2CA361DA00707CAE = {
 			isa = PBXGroup;
 			children = (
+				7AC0F16000000000000000C0 /* Base.xcconfig */,
 				7A4E646A2CA361DA00707CAE /* PioneerScheduler */,
 				7A4E64692CA361DA00707CAE /* Products */,
 			);
@@ -271,6 +273,7 @@
 		};
 		7A4E64782CA361DC00707CAE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AC0F16000000000000000C0 /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -314,6 +317,7 @@
 		};
 		7A4E64792CA361DC00707CAE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AC0F16000000000000000C0 /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
