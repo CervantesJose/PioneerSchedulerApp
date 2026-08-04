@@ -54,7 +54,7 @@ struct TimesheetView: View {
                 NavigationStack {
                     CreateTimesheetView()
                         .environment(viewModel)
-                        .presentationDetents([.fraction(0.35)])
+                        .presentationDetents([.large])
                 }
             }
         }

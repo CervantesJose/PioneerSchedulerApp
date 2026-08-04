@@ -45,7 +45,7 @@ final class TimesheetViewModel {
         }
     }
 
-    func addTimesheet(startDate: Date, endDate: Date) async {
+    func addTimesheet(startDate: Date, endDate: Date, workdays: [Workday] = []) async {
         guard let userID = await getUserID() else { return }
 
         let newTimesheet = TimesheetRow(
@@ -64,6 +64,23 @@ final class TimesheetViewModel {
                 .execute()
 
             let inserted = try decoder.decode(TimesheetRow.self, from: response.data)
+
+            // Stamp the new timesheet's id onto each draft workday, then persist
+            // them. workday.timesheet_id is a foreign key, so the timesheet row
+            // must exist (inserted above) before the workdays can reference it.
+            let workdaysToSave = workdays.map { workday -> Workday in
+                var workday = workday
+                workday.timesheetId = inserted.id
+                return workday
+            }
+
+            if workdaysToSave.isEmpty == false {
+                try await supabase
+                    .from(SBConstants.workdayTable)
+                    .insert(workdaysToSave)
+                    .execute()
+            }
+
             let hydratedResponse = try await supabase
                 .from(SBConstants.timesheetsTable)
                 .select(SBConstants.workdayColumn)

@@ -29,18 +29,26 @@ struct TimesheetDetailView: View {
                     WorkdayView(
                         workday: $workday,
                         isTaskFieldFocused: $isTaskFieldFocused,
-                        onDeleteWorkday: { deleteWorkday(id: workday.id) }
+                        onDeleteWorkday: {
+                            withAnimation {
+                                deleteWorkday(id: workday.id)
+                            }
+                        }
                     )
                 }
             }
 
             Section {
-                Button(action: {
-                    viewModel.addWorkday()
+                Button {
+                    withAnimation {
+                        viewModel.addWorkday()
+                    }
                     resetURL()
-                }) {
-                    Label("Add workday", systemImage: "plus")
+                } label: {
+                    Label("Add Workday", systemImage: "text.pad.header.badge.plus")
+                        .buttonStyle(.borderless)
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
                 .buttonStyle(.borderless)
             }
 
@@ -57,6 +65,7 @@ struct TimesheetDetailView: View {
                         .disabled(viewModel.workdays.isEmpty || isSaving)
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
         }
         .navigationTitle(title)

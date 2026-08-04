@@ -22,8 +22,10 @@ struct WorkdayView: View {
                 }
         }
 
-        Button("Add task") {
+        Button {
             workday.addTask()
+        } label: {
+            Label("Add task", systemImage: workday.tasks.isEmpty ? "plus" : "text.append")
         }
         .pioneerButtonStyle()
 
