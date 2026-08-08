@@ -3,6 +3,7 @@
 
 ## Specific files
 AppBlog.rtf
+CLAUDE.md
 
 ## Secrets
 Config/Secrets.local.xcconfig
