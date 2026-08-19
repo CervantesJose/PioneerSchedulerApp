@@ -36,11 +36,11 @@ final class AuthViewModel {
         !userEmail.isEmpty && !userPassword.isEmpty
     }
 
-    let appState: AppState
-
-    init(appState: AppState) {
-        self.appState = appState
-    }
+    // Deliberately holds no reference to AppState. Sign-in/up/out only talk to
+    // Supabase; the `authStateChanges` listener in AppState is what flips
+    // `authState` and drives the root view switch. Keeping the dependency out
+    // makes that one-way flow impossible to break by accident.
+    init() { }
 
     func showAlert() {
         isShowingAlert = true
@@ -171,6 +171,6 @@ final class AuthViewModel {
 
 extension AuthViewModel {
     static func preview() -> AuthViewModel {
-        AuthViewModel(appState: .preview())
+        AuthViewModel()
     }
 }

@@ -16,3 +16,26 @@ struct TimesheetWithWorkdays: Codable, Identifiable, Hashable {
     var endDate: Date
     var workday: [Workday]
 }
+
+extension TimesheetWithWorkdays {
+
+    /// Assembles the read model from its two halves.
+    ///
+    /// Lets a caller that already holds both the timesheet row and its workdays
+    /// build the hydrated shape locally instead of spending a round trip on the
+    /// nested `*, workday(*)` select.
+    init(row: TimesheetRow, workday: [Workday]) {
+        self.init(
+            id: row.id,
+            userId: row.userId,
+            startDate: row.startDate,
+            endDate: row.endDate,
+            workday: workday
+        )
+    }
+
+    /// The timesheet's own columns, without its workdays.
+    var row: TimesheetRow {
+        TimesheetRow(id: id, userId: userId, startDate: startDate, endDate: endDate)
+    }
+}

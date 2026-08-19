@@ -1,47 +1,74 @@
 import Foundation
 
+/// Formatters for PostgREST timestamps.
+///
+/// Building a `DateFormatter` or `ISO8601DateFormatter` is expensive, and a
+/// single timesheet carries ~20 date fields (two per timesheet plus three per
+/// workday), so these are created once for the process rather than once per
+/// decoded value. Both types are documented as safe for concurrent parsing as
+/// long as they are not reconfigured, which they are not.
+private enum SupabaseDateFormat {
+
+    /// ISO8601 with milliseconds — what PostgREST returns most of the time, and
+    /// what we encode with.
+    static let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    /// ISO8601 with whole seconds, for columns stored without sub-second precision.
+    static let iso8601: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
+
+    /// Postgres `timestamptz` often serializes six fractional digits, which
+    /// `ISO8601DateFormatter` rejects outright.
+    static let microseconds: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX"
+        return formatter
+    }()
+}
+
 extension JSONDecoder {
-    static var supabase: JSONDecoder {
+
+    /// Decoder for every Supabase read. Installed on the shared client in
+    /// `Supabase.swift`, so `execute().value` uses it automatically — a plain
+    /// `JSONDecoder()` will fail on real backend rows.
+    static let supabase: JSONDecoder = {
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .custom { d in
-            let raw = try d.singleValueContainer().decode(String.self)
-            let string = raw.replacingOccurrences(of: " ", with: "T") // UI sometimes shows a space
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let raw = try decoder.singleValueContainer().decode(String.self)
+            // Studio and some clients render the separator as a space.
+            let string = raw.contains(" ") ? raw.replacingOccurrences(of: " ", with: "T") : raw
 
-            // 1) ISO8601 with fractional seconds
-            let isoFrac = ISO8601DateFormatter()
-            isoFrac.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-            if let dateString = isoFrac.date(from: string) { return dateString }
-
-            // 2) ISO8601 without fractional seconds
-            let iso = ISO8601DateFormatter()
-            iso.formatOptions = [.withInternetDateTime]
-            if let dateTime = iso.date(from: string) { return dateTime }
-
-            // 3) Handle microseconds explicitly, just in case (PostgREST often returns 6 digits)
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX"
-            if let dateTime = dateFormatter.date(from: string) { return dateTime }
+            if let date = SupabaseDateFormat.iso8601WithFractionalSeconds.date(from: string) { return date }
+            if let date = SupabaseDateFormat.iso8601.date(from: string) { return date }
+            if let date = SupabaseDateFormat.microseconds.date(from: string) { return date }
 
             throw DecodingError.dataCorrupted(
-                .init(codingPath: d.codingPath, debugDescription: "Unrecognized date: \(raw)")
+                .init(codingPath: decoder.codingPath, debugDescription: "Unrecognized date: \(raw)")
             )
         }
         return decoder
-    }
+    }()
 }
 
 extension JSONEncoder {
-    static var supabase: JSONEncoder {
-        let encoder = JSONEncoder()
-        let format = ISO8601DateFormatter()
 
-        format.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        encoder.dateEncodingStrategy = .custom { date, e in
-            var custom = e.singleValueContainer()
-            try custom.encode(format.string(from: date))
+    /// Encoder for every Supabase write. Installed on the shared client in
+    /// `Supabase.swift`.
+    static let supabase: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            try container.encode(SupabaseDateFormat.iso8601WithFractionalSeconds.string(from: date))
         }
         return encoder
-    }
+    }()
 }
