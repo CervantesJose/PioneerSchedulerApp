@@ -19,12 +19,7 @@
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>backgroundColor</string>
-		<key>UIImageName</key>
-		<string>launchScreenIcon</string>
-	</dict>
+	<key>UILaunchStoryboardName</key>
+	<string>Launch Screen</string>
 </dict>
 </plist>
